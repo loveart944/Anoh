@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Attendance Calendar</title>
+  <style>
+    :root {
+      /* Light theme variables */
+      --color-present: #2ecc71; /* Green */
+      --color-absent: #e74c3c; /* Red */
+      --color-holiday: #54acbf; /* Blue */
+      --color-overtime: #f1c40f; /* Yellow for OT button */
+      --color-clear: #95a5a6; /* Grey for Clear button */
+      --color-note: #9b59b6; /* Purple for Note button and indicator */
+      --color-halfday: #ff9800;  /* Orange */
+      --color-leave: #3f51b5;     /* Indigo Blue */
+      --color-sunday: #e2ceb1; /* Khaki/Light Yellow for Sunday background */
+      
+      --color-text-dark: #3c3c3c;
+      --color-text-light: #ffffff;
+      --shadow-default: 0 2px 6px rgba(0,0,0,0.1);
+      --color-note-indicator: var(--color-note); /* Using note color for indicator */
+      --color-ot-indicator: #000000; /* Black for OT indicator */
+      --color-selected-multi: #6c757d; /* Grey for multi-select background */
+    }
+
+.attendance-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  padding: 6px 20px;
+  border: 2px solid #ff4d4d;
+  border-radius: 25px;
+  font-family: 'Cursive', sans-serif;
+  font-size: 20px;
+  color: #ff3333;
+  background-color: #fff0f0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+}
+
+.attendance-title:hover {
+  background-color: #ffe5e5;
+  cursor: default;
+  transform: scale(1.02);
+  transition: 0.3s ease;
+}
+
+    /* Dark theme variables */
+    body.dark-theme {
+      --color-present: #27ae60;
+      --color-absent: #c0392b;
+      --color-holiday: #3498db;
+      --color-overtime: #f39c12;
+      --color-clear: #7f8c8d;
+      --color-note: #8e44ad;
+      --color-halfday: #d35400;
+      --color-leave: #2c3e50;
+      --color-sunday: #525f78; /* Darker Sunday */
+      
+      --color-text-dark: #ecf0f1; /* Light text on dark background */
+      --color-text-light: #34495e; /* Dark text on light elements */
+
+      background: #2c3e50; /* Dark background */
+      color: var(--color-text-dark);
+    }
+
+    /* General Dark Theme Adjustments */
+    body.dark-theme .hamburger,
+    body.dark-theme .sidebar,
+    body.dark-theme .calendar,
+    body.dark-theme .button-group,
+    body.dark-theme .summary-modal,
+    body.dark-theme .about-modal { /* Added .about-modal */
+      background: #34495e; /* Darker background for components */
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    body.dark-theme .calendar-header h2,
+    body.dark-theme .sidebar li,
+    body.dark-theme .summary-modal h3,
+    body.dark-theme .summary-item span,
+    body.dark-theme .about-modal h3, /* Added */
+    body.dark-theme .about-modal p { /* Added */
+      color: var(--color-text-dark);
+    }
+
+    body.dark-theme .calendar-header button {
+      background: #465a71;
+      color: var(--color-text-dark);
+    }
+    body.dark-theme .calendar-header button:hover {
+      background: #5a6b82;
+    }
+
+    body.dark-theme .summary-icon:hover {
+        background: #5a6b82;
+    }
+
+    body.dark-theme .day {
+      background: #465a71;
+      color: var(--color-text-dark);
+    }
+
+    body.dark-theme .day.sunday {
+      background: var(--color-sunday);
+      color: var(--color-text-dark);
+    }
+
+    body.dark-theme .day.today > span {
+      color: var(--color-absent); /* Red underline for today */
+      text-decoration-color: var(--color-absent);
+    }
+
+    body.dark-theme .day.multi-selected {
+      background: var(--color-selected-multi);
+      color: var(--color-text-dark); /* Ensure text is visible in dark mode */
+    }
+
+    body.dark-theme .day.selected {
+        box-shadow: 0 0 0 3px #6a8bbf, 0 0 15px rgba(106, 139, 191, 0.7);
+    }
+
+    body.dark-theme .note-indicator,
+    body.dark-theme .ot-indicator { /* Added .ot-indicator as well */
+        color: var(--color-text-dark); /* Indicator text */
+    }
+
+    body.dark-theme .action-button {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    body.dark-theme .summary-modal h3 {
+        color: #6a8bbf;
+        border-bottom-color: #4a6b82;
+    }
+    body.dark-theme .summary-item {
+        border-bottom-color: #4a6b82;
+    }
+    body.dark-theme .summary-total {
+        border-top-color: #6a8bbf;
+    }
+    body.dark-theme .close-summary,
+    body.dark-theme .close-about { /* Added .close-about */
+        color: var(--color-text-dark);
+    }
+
+    /* Base Styles */
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: serif;
+      background: #f4f6fa;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--color-text-dark);
+    }
+
+    .hamburger {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      font-size: 24px;
+      color: #333;
+      cursor: pointer;
+      z-index: 1001;
+      background: white;
+      padding: 8px 12px;
+      border-radius: 50%;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      border: none;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 80%;
+      max-width: 280px;
+      height: 100%;
+      background: white;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.15);
+      transition: left 0.3s ease-out; 
+      z-index: 1000;
+      padding-top: 70px;
+      overflow-y: auto;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar li {
+      padding: 16px 20px;
+      border-bottom: 1px solid #eee;
+      font-weight: 500;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    body.dark-theme .sidebar li {
+        border-bottom-color: #4a6b82;
+    }
+
+    .sidebar li:hover {
+      background: #f5f5f5;
+    }
+    body.dark-theme .sidebar li:hover {
+        background: #4a6b82;
+    }
+
+    .sidebar.show {
+      left: 0;
+    }
+
+    .calendar-container {
+      width: 100%;
+      max-width: 100%;
+      padding: 70px 15px 20px;
+    }
+
+    .calendar {
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      margin: 0auto;
+    }
+
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .calendar-header h2 {
+      font-size: 1.2rem;
+      margin: 0;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .calendar-header button {
+      background: #eaeff5;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .calendar-header button:hover {
+      background: #d0d8e4;
+    }
+
+    .summary-icon {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 5px;
+      border-radius: 50%;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .day-name {
+      font-weight: bold;
+      color: #555;
+      padding: 8px 0;
+      font-size: 0.8rem;
+    }
+    body.dark-theme .day-name {
+        color: var(--color-text-dark);
+    }
+  
+    .day {
+      padding: 8px 0;
+      border-radius: 6px;
+      background: #eaeff5;
+      color: #333;
+      cursor: pointer;
+      transition: all 0.2s ease-out; /* Smooth transition for hover and selection */
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+   .day:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    body.dark-theme .day:hover {
+        box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+    
+    /* "Today" highlight - Ab kewal din ka number highlight hoga */
+    .day.today {
+      background: none;
+      border: none;
+      box-shadow: none;
+      transform: none;
+      font-weight: bold;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Today ke din ke number (jaise 29) ko laal highlight aur underline karna */
+    .day.today > span {
+      color: var(--color-absent);
+      text-decoration: underline;
+      text-decoration-color: var(--color-absent);
+      text-decoration-thickness: 2px;
+      padding-bottom: 2px;
+    }
+
+    /* Selected day animation - single day selection */
+   .day.selected {
+      box-shadow: 0 0 0 3px #4a6baf, 0 0 15px rgba(74, 107, 175, 0.7); /* Thicker border and more prominent shadow */
+      transform: scale(1.08); /* Slightly larger scale on selection */
+      z-index: 1; /* Bring selected day slightly forward */
+    }
+
+    /* Multi-selected day highlight */
+    .day.multi-selected {
+      background: var(--color-selected-multi);
+      color: var(--color-text-light);
+      border: 2px solid var(--color-selected-multi);
+      box-shadow: 0 0 0 2px var(--color-selected-multi), 0 0 8px rgba(0,0,0,0.3);
+    }
+
+    /* Sunday highlight */
+    .day.sunday {
+      background: var(--color-sunday);
+      color: var(--color-text-dark); /* Keep text dark for better contrast */
+      font-weight: bold;
+    }
+  
+    .day.present {
+      background: var(--color-present);
+      color: var(--color-text-light);
+    }
+
+    .day.absent {
+      background: var(--color-absent);
+      color: var(--color-text-light);
+    }
+
+    .day.holiday {
+      background: var(--color-holiday);
+      color: var(--color-text-light);
+    }
+
+   .day.halfday {
+  background: var(--color-halfday);
+  color: var(--color-text-light);
+}
+
+.day.leave {
+  background: var(--color-leave);
+  color: var(--color-text-light);
+}
+  
+
+    .note-indicator {
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      font-size: 0.6rem;
+      background: var(--color-note-indicator);
+      color: white;
+      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+  /* OT इंडिकेटर (काला गोला) */
+.ot-indicator {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  font-size: 0.6em;
+  background: var(--color-ot-indicator);
+  color: white;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Present (हरा कलर) के साथ OT इंडिकेटर दिखे */
+.day.present .ot-indicator {
+  background: black; /* OT इंडिकेटर हमेशा काला दिखे */
+}
+
+ .button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  max-width: 500px;
+  margin: 30px auto 0 auto;
+}
+
+.action-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.action-button i {
+  font-size: 1rem;
+}
+
+/* Button-specific colors */
+.present-btn    { background-color: #28a745; }   /* Green */
+.absent-btn     { background-color: #dc3545; }   /* Red */
+.holiday-btn    { background-color: #17a2b8; }   /* Teal/Blue */
+.clear-btn      { background-color: #6c757d; }   /* Gray */
+.overtime-btn   { background-color: #4339f2; }   /* Indigo */
+.note-btn       { background-color: #a029dc; }   /* Purple */
+
+.halfday-btn {
+  background-color: #ff9800;  /* Orange */
+}
+
+.leave-btn {
+  background-color: #3f51b5;  /* Indigo Blue */
+}
+/* Hover effect */
+.action-button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px) scale(1.02);
+}
+
+.empty {
+  background: transparent;
+  pointer-events: none;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  display: none;
+  transition: opacity 0.3s ease-out;
+  opacity: 0;
+}
+
+.overlay.show {
+  display: block;
+  opacity: 1;
+}
+
+/* Summary Modal Styles */
+.summary-modal,
+.about-modal { /* Combined common modal styles */
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  z-index: 1002;
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  transition: all 0.3s ease-out;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.summary-modal.show,
+.about-modal.show { /* Combined common show styles */
+  display: block;
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.summary-modal h3,
+.about-modal h3 { /* Combined h3 styles */
+  margin-top: 0;
+  color: #4a6baf;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #eee;
+}
+
+.summary-total {
+  font-weight: bold;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 2px solid #4a6baf;
+}
+
+.close-summary,
+.close-about { /* Combined close button styles */
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+/* Specific About Modal Styles */
+.about-modal p {
+  line-height: 1.6;
+  color: #555; /* Default text color for light theme */
+}
+
+
+@media (min-width: 400px) {
+  .calendar {
+    padding: 20px;
+  }
+  .calendar-grid {
+    gap: 6px;
+  }
+  .day {
+    padding: 10px 0;
+  }
+}
+
+@media (min-width: 500px) {
+  .calendar-container {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .button-group {
+    flex-direction: row;
+    gap: 8px;
+  }
+  .action-button {
+    padding: 10px;
+    font-size: 0.8rem;
+  }
+}
+  </style>
+</head>
+<body>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle Navigation Menu">☰</button>
+
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <div class="sidebar" id="sidebar">
+    <ul>
+      <li onclick="alert('Add New Task clicked')">+ Add New task</li>
+      <li onclick="toggleTheme()">Theme</li>
+      <li onclick="alert('Settings clicked')">Setting</li>
+      <li onclick="showAboutModal()">About</li> <li onclick="alert('Feedback clicked')">Feedback</li>
+    </ul>
+  </div>
+
+<div class="attendance-title">
+  ❤️ Attendance
+</div>
+
+  <div class="calendar-container">
+    <div class="calendar">
+      <div class="calendar-header">
+        <button onclick="changeMonth(-1)" aria-label="Previous Month">&#8592;</button>
+        <div class="header-right">
+          <h2 id="monthYear"></h2>
+          <button class="summary-icon" onclick="showMonthSummary()" aria-label="Show Month Summary">📊</button>
+        </div>
+        <button onclick="changeMonth(1)" aria-label="Next Month">&#8594;</button>
+      </div>
+      <div class="calendar-grid" id="calendarDays"></div>
+    </div>
+  </div>
+
+  <div class="button-group">
+    <button class="action-button present-btn" onclick="markSelectedDays('present')" aria-label="Mark selected days as Present">
+      ✅ Present
+    </button>
+
+    <button class="action-button absent-btn" onclick="markSelectedDays('absent')" aria-label="Mark selected days as Absent">
+      ❌ Absent
+    </button>
+
+    <button class="action-button holiday-btn" onclick="markSelectedDays('holiday')" aria-label="Mark selected days as Holiday">
+      🏖️ Holiday
+    </button>
+
+    <button class="action-button clear-btn" onclick="clearSelectedDaysConfirmation()" aria-label="Clear status for selected days">
+      🧼 Clear
+    </button>
+
+    <button class="action-button overtime-btn" onclick="markSelectedDaysOvertime()" aria-label="Add Overtime for selected days">
+      ⏰ OT
+    </button>
+
+    <button class="action-button note-btn" onclick="addNoteToSelectedDays()" aria-label="Add Note to selected days">
+      📝 Note
+    </button>
+
+    <button class="action-button halfday-btn" onclick="markSelectedDays('halfday')" aria-label="Mark selected days as Half Day">⏳ Half Day</button>
+    <button class="action-button leave-btn" onclick="markSelectedDays('leave')" aria-label="Mark selected days as Leave">✈️ Leave</button>
+  </div>
+
+  <div class="summary-modal" id="summaryModal">
+    <button class="close-summary" onclick="closeSummary()" aria-label="Close Summary Modal">×</button>
+    <h3 id="summaryMonthTitle"></h3>
+    <div id="summaryContent"></div>
+  </div>
+
+  <div class="about-modal" id="aboutModal">
+    <button class="close-about" onclick="closeAboutModal()" aria-label="Close About Modal">×</button>
+    <h3>ऐप के बारे में</h3>
+    <p>
+      यह कैलेंडर ऐप आपके **रोजमर्रा के अटेंडेंस** और **कामकाज को आसानी से ट्रैक** करने के लिए डिज़ाइन किया गया है। आप कुछ ही टैप में किसी भी दिन को **Present, Absent, Half Day, Leave, Holiday, या Overtime** के रूप में मार्क कर सकते हैं, साथ ही महत्वपूर्ण **नोट्स** भी जोड़ सकते हैं।
+    </p>
+    <br>
+    <p>
+      चाहे आप छात्र हों, वर्किंग प्रोफेशनल, या बस अपनी दैनिक गतिविधियों का रिकॉर्ड रखना चाहते हों—यह ऐप आपकी **प्लानिंग और प्रोडक्टिविटी को बेहतर बनाने में मदद करेगा।**
+    </p>
+  </div>
+
+  <script>
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+                       "July", "August", "September", "October", "November", "December"];
+    const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const calendarDays = document.getElementById("calendarDays");
+    const monthYear = document.getElementById("monthYear");
+
+    let today = new Date();
+    let currentMonth = today.getMonth();
+    let currentYear = today.getFullYear();
+    let currentDay = today.getDate(); // Numeric day of the month
+
+    let selectedDays = new Set(); // Stores dateKey strings for multi-selection
+    
+    // Load data from localStorage or initialize empty objects
+    let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
+    let overtimeData = JSON.parse(localStorage.getItem('overtimeData')) || {};
+    let notesData = JSON.parse(localStorage.getItem('notesData')) || {};
+
+    // Load theme preference from localStorage
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+
+    /**
+     * Generates and displays the calendar for a given month and year.
+     * @param {number} month - The month (0-11).
+     * @param {number} year - The full year (e.g., 2023).
+     */
+    function generateCalendar(month, year) {
+      calendarDays.innerHTML = "";
+      selectedDays.clear(); // Clear selections when month changes
+
+      // Add day names (Sun, Mon, Tue...)
+      dayNames.forEach(day => {
+        const div = document.createElement("div");
+        div.classList.add("day-name");
+        div.textContent = day;
+        calendarDays.appendChild(div);
+      });
+
+      const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 for Sunday, 1 for Monday, etc.
+      const totalDays = new Date(year, month + 1, 0).getDate(); // Get total days in the month
+
+      // Add empty divs for days before the 1st of the month
+      for (let i = 0; i < firstDayOfMonth; i++) {
+        const empty = document.createElement("div");
+        empty.classList.add("day", "empty");
+        calendarDays.appendChild(empty);
+      }
+
+      // Add actual day cells
+      for (let i = 1; i <= totalDays; i++) {
+        const day = document.createElement("div");
+        day.classList.add("day");
+        
+        const dayNumberSpan = document.createElement('span'); // Wrap day number in a span
+        dayNumberSpan.textContent = i;
+        day.appendChild(dayNumberSpan);
+
+        const dateKey = `${year}-${month+1}-${i}`; // Format:YYYY-M-D
+        day.dataset.date = dateKey;
+        
+        // Apply 'today' class if it's the current date
+        if (i === currentDay && month === today.getMonth() && year === today.getFullYear()) {
+          day.classList.add("today");
+        }
+
+       
+
+
+ // Apply 'sunday' class
+        const dayOfWeek = new Date(year, month, i).getDay();
+        if (dayOfWeek === 0) { // 0 represents Sunday
+            day.classList.add("sunday");
+        }
+        
+        // Apply saved attendance status (present, absent, holiday, halfday, leave)
+        if (attendanceData[dateKey]) {
+          day.classList.add(attendanceData[dateKey]);
+        }
+        
+        // Add click event listener for day selection
+        day.addEventListener("click", function() {
+          const clickedDateKey = this.dataset.date;
+          if (selectedDays.has(clickedDateKey)) {
+            selectedDays.delete(clickedDateKey);
+            this.classList.remove('multi-selected', 'selected'); // Remove both
+          } else {
+            selectedDays.add(clickedDateKey);
+            this.classList.add('multi-selected');
+            // If only one day is selected, also apply 'selected' class
+            if (selectedDays.size === 1) {
+                this.classList.add('selected');
+            } else {
+                // If more than one day is selected, ensure no single 'selected' class remains
+                document.querySelectorAll('.day.selected').forEach(d => d.classList.remove('selected'));
+            }
+          }
+        });
+        
+        // Add Overtime Indicator if data exists
+        if (overtimeData[dateKey]) {
+          addOvertimeIndicator(day, overtimeData[dateKey]);
+        }
+        
+        // Add Note Indicator if data exists
+        if (notesData[dateKey]) {
+          addNoteIndicator(day);
+        }
+        
+        calendarDays.appendChild(day);
+      }
+
+      monthYear.textContent = `${monthNames[month]} ${year}`;
+    }
+
+    /**
+     * Adds or updates the overtime indicator on a day element.
+     * @param {HTMLElement} dayElement - The DOM element for the day.
+     * @param {number} hours - The number of overtime hours.
+     */
+    function addOvertimeIndicator(dayElement, hours) {
+      const existingIndicator = dayElement.querySelector('.ot-indicator');
+      if (existingIndicator) existingIndicator.remove();
+      
+      if (hours > 0) {
+        const indicator = document.createElement('div');
+        indicator.className = 'ot-indicator';
+        indicator.textContent = hours;
+        dayElement.appendChild(indicator);
+      }
+    }
+
+    /**
+     * Adds a note indicator to a day element.
+     * @param {HTMLElement} dayElement - The DOM element for the day.
+     */
+    function addNoteIndicator(dayElement) {
+      const existingIndicator = dayElement.querySelector('.note-indicator');
+      if (existingIndicator) existingIndicator.remove();
+      
+      const indicator = document.createElement('div');
+      indicator.className = 'note-indicator';
+      indicator.textContent = 'N'; // Or a small icon, e.g., '📝'
+      dayElement.appendChild(indicator);
+    }
+
+    /**
+     * Changes the displayed month in the calendar.
+     * @param {number} step - -1 for previous month, 1 for next month.
+     */
+    function changeMonth(step) {
+      currentMonth += step;
+      if (currentMonth < 0) {
+        currentMonth = 11;
+        currentYear--;
+      } else if (currentMonth > 11) {
+        currentMonth = 0;
+        currentYear++;
+      }
+      generateCalendar(currentMonth, currentYear);
+    }
+
+    /**
+     * Toggles the visibility of the sidebar and overlay.
+     */
+    function toggleMenu() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('overlay');
+      sidebar.classList.toggle('show');
+      overlay.classList.toggle('show');
+    }
+
+    /**
+     * Toggles between light and dark themes.
+     */
+    function toggleTheme() {
+        document.body.classList.toggle('dark-theme');
+        if (document.body.classList.contains('dark-theme')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+        toggleMenu(); // Close sidebar after changing theme
+    }
+
+    
+    // --- Bulk Action Functions ---
+
+    /**
+     * Updates the CSS classes and attendance data for a given day element.
+     * @param {HTMLElement} dayElement - The DOM element for the day.
+     * @param {string} status - The attendance status (e.g., 'present', 'absent', 'holiday', 'halfday', 'leave').
+     */
+    function updateDayStatus(dayElement, status) {
+        // Remove all previous attendance-related classes
+        dayElement.classList.remove('present', 'absent', 'holiday', 'halfday', 'leave');
+        if (status) {
+            dayElement.classList.add(status);
+        }
+        // Reapply 'today' and 'sunday' if applicable, as status might overwrite them
+        reapplyStaticDayClasses(dayElement);
+    }
+
+    /**
+     * Applies attendance status to all currently selected days.
+     * @param {string} status - The status to apply (e.g., 'present', 'absent', 'holiday', 'halfday', 'leave').
+     */
+    function markSelectedDays(status) {
+      if (selectedDays.size === 0) {
+        alert("Please select at least one day to mark.");
+        return;
+      }
+
+      selectedDays.forEach(dateKey => {
+        const dayElement = document.querySelector(`.day[data-date="${dateKey}"]`);
+        if (dayElement) {
+          updateDayStatus(dayElement, status);
+          attendanceData[dateKey] = status;
+        }
+      });
+      localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+      clearAllSelections(); // Clear selections after action
+    }
+    
+    /**
+     * Prompts for overtime hours and applies them to selected days.
+     */
+    function markSelectedDaysOvertime() {
+        if (selectedDays.size === 0) {
+            alert("Please select at least one day to add overtime.");
+            return;
+        }
+
+        const hoursInput = prompt("Enter overtime hours (e.g., 2, 4.5). Enter 0 to clear:");
+        if (hoursInput === null) { // User clicked cancel
+            return;
+        }
+        
+        const numericHours = parseFloat(hoursInput.trim());
+
+        if (isNaN(numericHours)) {
+             alert("Invalid input for overtime hours. Please enter a number (e.g., 2, 4.5).");
+             return;
+        }
+
+        selectedDays.forEach(dateKey => {
+            const dayElement = document.querySelector(`.day[data-date="${dateKey}"]`);
+            if (dayElement) {
+                if (numericHours > 0) {
+                    overtimeData[dateKey] = numericHours;
+                    dayElement.classList.add('overtime'); // Add 'overtime' class for styling
+                } else {
+                    delete overtimeData[dateKey];
+                    dayElement.classList.remove('overtime'); // Remove 'overtime' class
+                }
+                addOvertimeIndicator(dayElement, numericHours);
+            }
+        });
+        localStorage.setItem('overtimeData', JSON.stringify(overtimeData));
+        clearAllSelections();
+    }
+
+    /**
+     * Prompts for a note and applies it to selected days.
+     */
+    function addNoteToSelectedDays() {
+        if (selectedDays.size === 0) {
+            alert("Please select at least one day to add a note.");
+            return;
+        }
+        
+        const note = prompt("Enter note for selected days:");
+        if (note === null) { // User clicked cancel
+            return;
+        }
+
+        selectedDays.forEach(dateKey => {
+            const dayElement = document.querySelector(`.day[data-date="${dateKey}"]`);
+            if (dayElement) {
+                if (note.trim() !== '') {
+                    notesData[dateKey] = note;
+                    addNoteIndicator(dayElement);
+                } else {
+                    delete notesData[dateKey];
+                    const existingNoteIndicator = dayElement.querySelector('.note-indicator');
+                    if (existingNoteIndicator) existingNoteIndicator.remove();
+                }
+            }
+        });
+        localStorage.setItem('notesData', JSON.stringify(notesData));
+        clearAllSelections();
+    }
+
+    /**
+     * Prompts for user confirmation before clearing selected days.
+     */
+    function clearSelectedDaysConfirmation() {
+      if (selectedDays.size === 0) {
+        alert("Please select at least one day to clear.");
+        return;
+      }
+
+      const confirmClear = confirm("Are you sure you want to clear the status, overtime, and notes for the selected day(s)? This action cannot be undone.");
+
+      if (confirmClear) {
+        clearSelectedDays();
+      } else {
+        clearAllSelections(); // Just clear selections if user cancels
+      }
+    }
+
+    /**
+     * Clears all attendance, overtime, and note data for selected days.
+     */
+    function clearSelectedDays() {
+        selectedDays.forEach(dateKey => {
+            const dayElement = document.querySelector(`.day[data-date="${dateKey}"]`);
+            if (dayElement) {
+                // Remove all custom classes
+                dayElement.classList.remove('present', 'absent', 'holiday', 'overtime', 'halfday', 'leave');
+                
+                // Clear indicators and data
+                delete attendanceData[dateKey];
+                delete overtimeData[dateKey];
+                delete notesData[dateKey];
+
+                const noteIndicator = dayElement.querySelector('.note-indicator');
+                if (noteIndicator) noteIndicator.remove();
+                const otIndicator = dayElement.querySelector('.ot-indicator');
+                if (otIndicator) otIndicator.remove();
+                
+                // Reapply 'today' and 'sunday' if applicable
+                reapplyStaticDayClasses(dayElement);
+            }
+        });
+        localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+        localStorage.setItem('overtimeData', JSON.stringify(overtimeData));
+        localStorage.setItem('notesData', JSON.stringify(notesData));
+        clearAllSelections();
+    }
+
+    /**
+     * Removes all 'multi-selected' and 'selected' classes from days and clears the selectedDays Set.
+     */
+    function clearAllSelections() {
+        document.querySelectorAll('.day.multi-selected, .day.selected').forEach(day => {
+            day.classList.remove('multi-selected', 'selected');
+        });
+        selectedDays.clear();
+    }
+
+    /**
+     * Reapplies 'today' and 'sunday' classes to a day element.
+     * This is useful after attendance status changes which might override these.
+     * @param {HTMLElement} dayElement - The DOM element for the day.
+     */
+    function reapplyStaticDayClasses(dayElement) {
+        const dateKey = dayElement.dataset.date;
+        const [year, month, dayNumber] = dateKey.split('-').map(Number);
+        
+        // Reapply 'today' class
+        if (dayNumber === today.getDate() && month - 1 === today.getMonth() && year === today.getFullYear()) {
+            dayElement.classList.add('today');
+        } else {
+            dayElement.classList.remove('today');
+        }
+
+        // Reapply 'sunday' class
+        const dayOfWeek = new Date(year, month - 1, dayNumber).getDay(); // Month is 0-indexed for Date constructor
+        if (dayOfWeek === 0) { // 0 represents Sunday
+            dayElement.classList.add("sunday");
+        } else {
+            dayElement.classList.remove("sunday");
+        }
+    }
+
+
+    // Month Summary Functions
+    /**
+     * Displays a summary of attendance, overtime, and notes for the current month.
+     */
+    function showMonthSummary() {
+      // Calculate totals
+      const totals = calculateMonthTotals();
+      
+      // Update modal content
+      document.getElementById('summaryMonthTitle').textContent = 
+        `${monthNames[currentMonth]} ${currentYear} Summary`;
+      
+      const summaryContent = document.getElementById('summaryContent');
+      summaryContent.innerHTML = ''; // Clear previous content
+
+      // Add summary items
+      addSummaryItem(summaryContent, 'Present', totals.present, 'present');
+      addSummaryItem(summaryContent, 'Absent', totals.absent, 'absent');
+      addSummaryItem(summaryContent, 'Half Day', totals.halfday, 'halfday'); // Added Half Day
+      addSummaryItem(summaryContent, 'Leave', totals.leave, 'leave'); // Added Leave
+      addSummaryItem(summaryContent, 'Holiday', totals.holiday, 'holiday');
+      addSummaryItem(summaryContent, 'Overtime Days', totals.overtimeDays, 'overtime');
+      addSummaryItem(summaryContent, 'Total Overtime Hours', totals.totalOvertimeHours, 'overtime');
+      addSummaryItem(summaryContent, 'Days with Notes', totals.notes, 'note');
+      
+      // Add total working days and attendance percentage
+      const totalDaysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const workingDays = totalDaysInMonth - totals.holiday - totals.sundayCount; // Exclude Sundays from working days for percentage calculation
+      const attendancePercentage = workingDays > 0 
+        ? Math.round(((totals.present + (totals.halfday / 2)) / workingDays) * 100) // Half-day counts as 0.5 for attendance
+        : 0;
+      
+      const totalItem = document.createElement('div');
+      totalItem.className = 'summary-total';
+      totalItem.innerHTML = `
+        <span>Total Days: ${totalDaysInMonth}</span><br>
+        <span>Working Days (excl. holidays & Sundays): ${workingDays}</span><br>
+        <span>Overall Attendance: ${attendancePercentage}%</span>
+      `;
+      summaryContent.appendChild(totalItem);
+      
+      // Show modal
+      document.getElementById('summaryModal').classList.add('show');
+      document.getElementById('overlay').classList.add('show');
+      clearAllSelections(); // Clear selections before showing summary
+    }
+
+    /**
+     * Closes the month summary modal and overlay.
+     */
+    function closeSummary() {
+      document.getElementById('summaryModal').classList.remove('show');
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    /**
+     * Calculates the totals for attendance, overtime, and notes for the current month.
+     * @returns {object} An object containing the calculated totals.
+     */
+    function calculateMonthTotals() {
+      const totals = {
+        present: 0,
+        absent: 0,
+        holiday: 0,
+        halfday: 0, // Added
+        leave: 0,   // Added
+        overtimeDays: 0,
+        totalOvertimeHours: 0,
+        notes: 0,
+        sundayCount: 0 // Added to correctly calculate working days
+      };
+      
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      
+      for (let day = 1; day <= daysInMonth; day++) {
+        const dateKey = `${currentYear}-${currentMonth + 1}-${day}`;
+        
+        // Count attendance statuses
+        if (attendanceData[dateKey]) {
+          totals[attendanceData[dateKey]]++;
+        }
+        
+        // Count overtime
+        if (overtimeData[dateKey]) {
+          totals.overtimeDays++;
+          totals.totalOvertimeHours += parseFloat(overtimeData[dateKey]); // Use parseFloat for decimal hours
+        }
+        
+        // Count notes
+        if (notesData[dateKey]) {
+          totals.notes++;
+        }
+
+        // Count Sundays
+        const dayOfWeek = new Date(currentYear, currentMonth, day).getDay();
+        if (dayOfWeek === 0) { // 0 represents Sunday
+            totals.sundayCount++;
+        }
+      }
+      
+      return totals;
+    }
+
+    /**
+     * Adds an item to the summary modal.
+     * @param {HTMLElement} container - The container element for summary items.
+     * @param {string} label - The label for the summary item (e.g., 'Present').
+     * @param {number} value - The value for the summary item.
+     * @param {string} type - The type of summary item (e.g., 'present', 'overtime').
+     */
+    function addSummaryItem(container, label, value, type) {
+      // Only show items with a value > 0, except for 'notes' which can be 0 but still relevant
+      if (value > 0 || (type === 'note' && value === 0)) { 
+        const item = document.createElement('div');
+        item.className = 'summary-item';
+        
+        const labelSpan = document.createElement('span');
+        labelSpan.textContent = label;
+        
+        const valueSpan = document.createElement('span');
+        valueSpan.textContent = value;
+        valueSpan.style.color = getSummaryColor(type);
+        
+        item.appendChild(labelSpan);
+        item.appendChild(valueSpan);
+        container.appendChild(item);
+      }
+    }
+
+    /**
+     * Returns the color for a summary item based on its type.
+     * @param {string} type - The type of summary item.
+     * @returns {string} The CSS color value.
+     */
+    function getSummaryColor(type) {
+      const colors = {
+        present: 'var(--color-present)',
+        absent: 'var(--color-absent)',
+        holiday: 'var(--color-holiday)',
+        halfday: 'var(--color-halfday)',
+        leave: 'var(--color-leave)',
+        overtime: 'var(--color-ot-indicator)', /* OT indicator black for summary */
+        note: 'var(--color-note)'
+      };
+      return colors[type] || '#333'; // Default to a dark grey if type is not found
+    }
+
+    /**
+     * Displays the About modal.
+     */
+    function showAboutModal() {
+      document.getElementById('aboutModal').classList.add('show');
+      document.getElementById('overlay').classList.add('show');
+      toggleMenu(); // Close sidebar when about modal opens
+    }
+
+    /**
+     * Closes the About modal and overlay.
+     */
+    function closeAboutModal() {
+      document.getElementById('aboutModal').classList.remove('show');
+      document.getElementById('overlay').classList.remove('show');
+    }
+
+    // Close sidebar/summary/about when clicking outside
+    document.addEventListener('click', function(event) {
+      const sidebar = document.getElementById('sidebar');
+      const hamburger = document.querySelector('.hamburger');
+      const summaryModal = document.getElementById('summaryModal');
+      const aboutModal = document.getElementById('aboutModal'); // Added
+      const overlay = document.getElementById('overlay');
+      
+      // Close sidebar if clicked outside and it's open
+      if (sidebar.classList.contains('show') && !sidebar.contains(event.target) && event.target !== hamburger) {
+        toggleMenu();
+      }
+
+      // Close summary modal if clicked outside and it's open
+      if (summaryModal.classList.contains('show') && event.target === overlay) {
+        closeSummary();
+      }
+
+      // Close about modal if clicked outside and it's open (Added)
+      if (aboutModal.classList.contains('show') && event.target === overlay) {
+        closeAboutModal();
+      }
+    });
+
+    // Initialize calendar on page load
+    generateCalendar(currentMonth, currentYear);
+  </script>
+</body>
+</html>
+
+
+
+
+
+ 
