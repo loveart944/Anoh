@@ -7,7 +7,7 @@
   <style>
     :root {
       /* Light theme variables */
-      --color-present: #2ecc71; /* Green */
+      --color-present: #5ad776; /* Green */
       --color-absent: #e74c3c; /* Red */
       --color-holiday: #54acbf; /* Blue */
       --color-overtime: #f1c40f; /* Yellow for OT button */
@@ -23,30 +23,15 @@
       --color-note-indicator: var(--color-note); /* Using note color for indicator */
       --color-ot-indicator: #000000; /* Black for OT indicator */
       --color-selected-multi: #6c757d; /* Grey for multi-select background */
+
+      /* Calendar Management Modal Colors */
+      --color-modal-bg: #ffffff;
+      --color-modal-border: #e0e0e0;
+      --color-input-border: #ccc;
+      --color-button-primary: #4CAF50; /* Green for Create/Load */
+      --color-button-danger: #f44336;  /* Red for Delete */
+      --color-button-secondary: #008CBA; /* Blue for Switch */
     }
-
-.attendance-title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 20px auto;
-  padding: 6px 20px;
-  border: 2px solid #ff4d4d;
-  border-radius: 25px;
-  font-family: 'Cursive', sans-serif;
-  font-size: 20px;
-  color: #ff3333;
-  background-color: #fff0f0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  width: fit-content;
-}
-
-.attendance-title:hover {
-  background-color: #ffe5e5;
-  cursor: default;
-  transform: scale(1.02);
-  transition: 0.3s ease;
-}
 
     /* Dark theme variables */
     body.dark-theme {
@@ -65,6 +50,14 @@
 
       background: #2c3e50; /* Dark background */
       color: var(--color-text-dark);
+
+      /* Dark Theme Calendar Management Modal Colors */
+      --color-modal-bg: #34495e;
+      --color-modal-border: #4a6b82;
+      --color-input-border: #5a6b82;
+      --color-button-primary: #27ae60;
+      --color-button-danger: #c0392b;
+      --color-button-secondary: #2980b9;
     }
 
     /* General Dark Theme Adjustments */
@@ -73,7 +66,8 @@
     body.dark-theme .calendar,
     body.dark-theme .button-group,
     body.dark-theme .summary-modal,
-    body.dark-theme .about-modal { /* Added .about-modal */
+    body.dark-theme .about-modal,
+    body.dark-theme .calendar-modal { /* Added .calendar-modal */
       background: #34495e; /* Darker background for components */
       box-shadow: 0 4px 15px rgba(0,0,0,0.3);
     }
@@ -83,7 +77,10 @@
     body.dark-theme .summary-modal h3,
     body.dark-theme .summary-item span,
     body.dark-theme .about-modal h3, /* Added */
-    body.dark-theme .about-modal p { /* Added */
+    body.dark-theme .about-modal p, /* Added */
+    body.dark-theme .calendar-modal h3,
+    body.dark-theme .calendar-modal label,
+    body.dark-theme .calendar-list-item span {
       color: var(--color-text-dark);
     }
 
@@ -109,9 +106,8 @@
       color: var(--color-text-dark);
     }
 
-    body.dark-theme .day.today > span {
-      color: var(--color-absent); /* Red underline for today */
-      text-decoration-color: var(--color-absent);
+    body.dark-theme .day.today::after { /* Dark theme today indicator */
+      background-color: var(--color-absent); 
     }
 
     body.dark-theme .day.multi-selected {
@@ -132,7 +128,8 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
-    body.dark-theme .summary-modal h3 {
+    body.dark-theme .summary-modal h3,
+    body.dark-theme .calendar-modal h3 {
         color: #6a8bbf;
         border-bottom-color: #4a6b82;
     }
@@ -143,8 +140,24 @@
         border-top-color: #6a8bbf;
     }
     body.dark-theme .close-summary,
-    body.dark-theme .close-about { /* Added .close-about */
+    body.dark-theme .close-about,
+    body.dark-theme .close-calendar-modal { /* Added */
         color: var(--color-text-dark);
+    }
+
+    body.dark-theme .calendar-modal input[type="text"] {
+        background: #5a6b82;
+        border-color: var(--color-input-border);
+        color: var(--color-text-dark);
+    }
+
+    body.dark-theme .calendar-modal button {
+        color: var(--color-text-light); /* Buttons text light in dark mode */
+    }
+
+    body.dark-theme .calendar-modal .calendar-list-item {
+        background: #465a71;
+        border-color: #5a6b82;
     }
 
     /* Base Styles */
@@ -166,7 +179,7 @@
 
     .hamburger {
       position: fixed;
-      top: 15px;
+      top: 30px;
       left: 15px;
       font-size: 24px;
       color: #333;
@@ -206,9 +219,9 @@
     }
 
     .sidebar li {
-      padding: 16px 20px;
+      padding: 30px 40px;
       border-bottom: 1px solid #eee;
-      font-weight: 500;
+      font-weight: 600;
       color: #333;
       cursor: pointer;
       transition: background 0.2s;
@@ -241,7 +254,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       width: 100%;
-      margin: 0auto;
+      margin: 0 auto;
     }
 
     .calendar-header {
@@ -297,27 +310,49 @@
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
+      grid-auto-rows: 5ppx;
+      gap: 2px;
       text-align: center;
       font-size: 0.9rem;
     }
 
+.festival {
+      background-color: #fff3cd;
+      border: 2px solid #ffc107;
+      color: #b85604;
+    }
+
+    .festival-name {
+      display: block;
+      font-size: 14px;
+      font-weight: normal;
+      margin-top: 4px;
+    }
+
+
     .day-name {
-      font-weight: bold;
-      color: #555;
+      
+      font-weight: 0px;
+      font-family: serif;
+      color: #ff0000;
       padding: 8px 0;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
+      width: fit-content
+      border: 2px solid#efcd9f;
     }
     body.dark-theme .day-name {
         color: var(--color-text-dark);
     }
   
     .day {
-      padding: 8px 0;
+      padding: 12px 0; /* Updated: Changed from 8px to 12px */
       border-radius: 6px;
       background: #eaeff5;
       color: #333;
       cursor: pointer;
+      font-size: 0.9rem;
+      box-shadow: 5px;
+      font-weight: bold;
       transition: all 0.2s ease-out; /* Smooth transition for hover and selection */
       aspect-ratio: 1;
       display: flex;
@@ -328,7 +363,7 @@
     }
 
    .day:hover {
-      transform: scale(1.05);
+      transform: scale(1.04);
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
     body.dark-theme .day:hover {
@@ -337,22 +372,22 @@
     
     /* "Today" highlight - Ab kewal din ka number highlight hoga */
     .day.today {
-      background: none;
-      border: none;
-      box-shadow: none;
-      transform: none;
-      font-weight: bold;
       position: relative;
+      font-weight: bold;
       z-index: 1;
     }
     
     /* Today ke din ke number (jaise 29) ko laal highlight aur underline karna */
-    .day.today > span {
-      color: var(--color-absent);
-      text-decoration: underline;
-      text-decoration-color: var(--color-absent);
-      text-decoration-thickness: 2px;
-      padding-bottom: 2px;
+    .day.today::after {
+        content: '';
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 10px);
+        height: 2px;
+        background-color: var(--color-absent);
+        border-radius: 2px;
     }
 
     /* Selected day animation - single day selection */
@@ -375,6 +410,7 @@
       background: var(--color-sunday);
       color: var(--color-text-dark); /* Keep text dark for better contrast */
       font-weight: bold;
+      color: #ff00000;
     }
   
     .day.present {
@@ -427,8 +463,8 @@
   background: var(--color-ot-indicator);
   color: white;
   border-radius: 50%;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -439,43 +475,51 @@
   background: black; /* OT इंडिकेटर हमेशा काला दिखे */
 }
 
+
+
  .button-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  display: grid; /* Changed to grid */
+  grid-template-columns: repeat(4, 1fr); /* 4 columns */
+  gap: 10px;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   background: #ffffff;
   border-radius: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  max-width: 500px;
+  max-width: 500px; /* Adjust max-width as needed */
   margin: 30px auto 0 auto;
 }
 
 .action-button {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 18px;
+  justify-content: center; /* Center content */
+  gap: 6px;
+  padding: 8px 8px; /* Reduced padding for smaller buttons */
   border: none;
-  border-radius: 30px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  border-radius: 25px;
+  font-size: 0.8rem; /* Smaller font size */
+  font-weight: 500;
+  font-family: serif;
   color: white;
   cursor: pointer;
   transition: 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 90%; /* Make buttons take full grid column width */
+  min-height: 40px; /* Ensure a minimum height for all buttons */
+  text-align: center; /* Center text if it wraps */
+  white-space: nowrap; /* Prevent text from wrapping by default, adjust if needed */
 }
 
 .action-button i {
-  font-size: 1rem;
+  font-size: 0.8rem; /* Smaller icon size */
 }
 
 /* Button-specific colors */
-.present-btn    { background-color: #28a745; }   /* Green */
-.absent-btn     { background-color: #dc3545; }   /* Red */
-.holiday-btn    { background-color: #17a2b8; }   /* Teal/Blue */
+.present-btn    { background-color: #28a765; }   /* Green */
+.absent-btn     { background-color: #f88379; }   /* Red */
+.holiday-btn    { background-color: #95b7ca; }   /* Teal/Blue */
 .clear-btn      { background-color: #6c757d; }   /* Gray */
 .overtime-btn   { background-color: #4339f2; }   /* Indigo */
 .note-btn       { background-color: #a029dc; }   /* Purple */
@@ -518,13 +562,14 @@
 
 /* Summary Modal Styles */
 .summary-modal,
-.about-modal { /* Combined common modal styles */
+.about-modal,
+.calendar-modal { /* Combined common modal styles */
   display: none;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background: var(--color-modal-bg);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
@@ -536,21 +581,25 @@
   transition: all 0.3s ease-out;
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.9);
+  border: 1px solid var(--color-modal-border); /* Added border */
 }
 
 .summary-modal.show,
-.about-modal.show { /* Combined common show styles */
+.about-modal.show,
+.calendar-modal.show { /* Combined common show styles */
   display: block;
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
 
 .summary-modal h3,
-.about-modal h3 { /* Combined h3 styles */
+.about-modal h3,
+.calendar-modal h3 { /* Combined h3 styles */
   margin-top: 0;
-  color: #4a6baf;
-  border-bottom: 1px solid #eee;
+  color: var(--color-text-dark); /* Use text dark for titles */
+  border-bottom: 1px solid var(--color-modal-border);
   padding-bottom: 10px;
+  text-align: center;
 }
 
 .summary-item {
@@ -565,11 +614,12 @@
   font-weight: bold;
   margin-top: 15px;
   padding-top: 10px;
-  border-top: 2px solid #4a6baf;
+  border-top: 2px solid var(--color-modal-border);
 }
 
 .close-summary,
-.close-about { /* Combined close button styles */
+.close-about,
+.close-calendar-modal { /* Combined close button styles */
   position: absolute;
   top: 10px;
   right: 10px;
@@ -577,6 +627,7 @@
   border: none;
   font-size: 1.2rem;
   cursor: pointer;
+  color: var(--color-text-dark);
 }
 
 /* Specific About Modal Styles */
@@ -585,6 +636,95 @@
   color: #555; /* Default text color for light theme */
 }
 
+/* Calendar Management Modal Specific Styles */
+.calendar-modal form {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-modal-border);
+    margin-bottom: 15px;
+}
+
+.calendar-modal label {
+    font-weight: 500;
+    color: var(--color-text-dark);
+}
+
+.calendar-modal input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color-input-border);
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Ensures padding doesn't increase width */
+    color: var(--color-text-dark);
+    background: #f0f0f0;
+}
+
+.calendar-modal button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    color: var(--color-text-light); /* Default to light text for buttons */
+}
+
+.calendar-modal button:hover {
+    opacity: 0.9;
+}
+
+.calendar-modal .btn-create {
+    background-color: var(--color-button-primary);
+}
+
+.calendar-modal .calendar-list {
+    max-height: 250px;
+    overflow-y: auto;
+    border: 1px solid var(--color-input-border);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.calendar-modal .calendar-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    background: #eaeff5;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    font-size: 0.95rem;
+    color: var(--color-text-dark);
+}
+
+.calendar-modal .calendar-list-item:last-child {
+    border-bottom: none;
+}
+
+.calendar-modal .calendar-list-item button {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+    margin-left: 8px;
+}
+
+.calendar-modal .btn-switch {
+    background-color: var(--color-button-secondary);
+}
+
+.calendar-modal .btn-delete {
+    background-color: var(--color-button-danger);
+}
+
+.calendar-modal .current-calendar-indicator {
+    font-weight: bold;
+    color: var(--color-button-primary); /* Green for current indicator */
+    margin-left: 5px;
+}
 
 @media (min-width: 400px) {
   .calendar {
@@ -594,27 +734,73 @@
     gap: 6px;
   }
   .day {
-    padding: 10px 0;
+    padding: 15px 0; /* Updated: Changed from 10px to 15px */
   }
 }
 
 @media (min-width: 500px) {
   .calendar-container {
-    max-width: 400px;
+    max-width: 600px; /* Updated: Changed from 400px to 600px */
+  }
+  .day {
+      padding: 15px 0; /* Updated: Changed from 12px to 15px */
   }
 }
 
-@media (max-width: 480px) {
-  .button-group {
-    flex-direction: row;
-    gap: 8px;
-  }
-  .action-button {
-    padding: 10px;
-    font-size: 0.8rem;
-  }
+/* New Styles for Heart Rain */
+.attendance-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto 10px auto; /* Adjusted margin to move it closer to calendar */
+    padding: 10px 25px;
+    border: 2px solid #ff4d4d;
+    border-radius: 25px;
+    font-family: 'Cursive', sans-serif;
+    font-size: 24px;
+    color: #ff3333;
+    background-color: #fff0f0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    cursor: pointer;
+    z-index: 1; /* Ensure it's above other elements */
+    position: relative; /* Needed for z-index to work against siblings */
 }
-  </style>
+
+#heart-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999; /* Higher z-index to be on top of everything */
+    overflow: hidden; /* To prevent scrollbars if hearts go off screen */
+}
+
+.heart {
+    position: absolute;
+    font-size: 24px;
+    animation: fall 2s linear forwards;
+    white-space: nowrap; /* Prevent heart emoji from wrapping */
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(-50px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+
+
+
+
+</style>
 </head>
 <body>
   <button class="hamburger" onclick="toggleMenu()" aria-label="Toggle Navigation Menu">☰</button>
@@ -622,18 +808,18 @@
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
   <div class="sidebar" id="sidebar">
-    <ul>
-      <li onclick="alert('Add New Task clicked')">+ Add New task</li>
-      <li onclick="toggleTheme()">Theme</li>
-      <li onclick="alert('Settings clicked')">Setting</li>
-      <li onclick="showAboutModal()">About</li> <li onclick="alert('Feedback clicked')">Feedback</li>
-    </ul>
+    <nav>
+      <ul>
+        <li onclick="showCalendarManager()">📅 Manage Calendars</li>
+        <li onclick="toggleTheme()">🎨 Theme</li>
+        <li onclick="alert('Settings clicked')">⚙️ Setting</li>
+        <li onclick="showAboutModal()">ℹ️ About</li>
+        <li onclick="window.location.href='mailto:riteshksingh888@gmail.com'">📧 Send Feedback</li> </ul>
+    </nav>
   </div>
 
-<div class="attendance-title">
-  ❤️ Attendance
-</div>
-
+  <h1 class="attendance-title" onclick="startHeartRain()">❤️ Attendance</h1>
+  <div id="heart-container"></div>
   <div class="calendar-container">
     <div class="calendar">
       <div class="calendar-header">
@@ -661,12 +847,12 @@
       🏖️ Holiday
     </button>
 
-    <button class="action-button clear-btn" onclick="clearSelectedDaysConfirmation()" aria-label="Clear status for selected days">
-      🧼 Clear
-    </button>
-
     <button class="action-button overtime-btn" onclick="markSelectedDaysOvertime()" aria-label="Add Overtime for selected days">
       ⏰ OT
+    </button>
+
+    <button class="action-button clear-btn" onclick="clearSelectedDaysConfirmation()" aria-label="Clear status for selected days">
+      🧼 Clear
     </button>
 
     <button class="action-button note-btn" onclick="addNoteToSelectedDays()" aria-label="Add Note to selected days">
@@ -695,6 +881,20 @@
     </p>
   </div>
 
+  <div class="calendar-modal" id="calendarModal">
+    <button class="close-calendar-modal" onclick="closeCalendarModal()" aria-label="Close Calendar Management Modal">×</button>
+    <h3>Manage Calendars</h3>
+    <form id="newCalendarForm">
+      <label for="newCalendarName">New Calendar Name:</label>
+      <input type="text" id="newCalendarName" placeholder="e.g., Project X, My Shift, Personal" required>
+      <button type="submit" class="btn-create">➕ Create New Calendar</button>
+    </form>
+    
+    <h4>Saved Calendars:</h4>
+    <div id="calendarList" class="calendar-list">
+      </div>
+  </div>
+
   <script>
     const monthNames = ["January", "February", "March", "April", "May", "June",
                        "July", "August", "September", "October", "November", "December"];
@@ -709,15 +909,85 @@
 
     let selectedDays = new Set(); // Stores dateKey strings for multi-selection
     
-    // Load data from localStorage or initialize empty objects
-    let attendanceData = JSON.parse(localStorage.getItem('attendanceData')) || {};
-    let overtimeData = JSON.parse(localStorage.getItem('overtimeData')) || {};
-    let notesData = JSON.parse(localStorage.getItem('notesData')) || {};
+    // --- Calendar Management Variables ---
+    let allCalendarsData = JSON.parse(localStorage.getItem('allCalendarsData')) || {};
+    let currentCalendarName = localStorage.getItem('currentCalendarName') || 'Default Calendar';
+
+    // Initialize the current calendar's data or create a default one
+    if (!allCalendarsData[currentCalendarName]) {
+        allCalendarsData[currentCalendarName] = {
+            attendance: {},
+            overtime: {},
+            notes: {}
+        };
+        saveAllCalendarsData(); // Save initial default
+    }
+
+// 🪔 Festivals: Key = yyyy-mm-dd
+    const festivals = {
+      "2025-06-05": "World Environment Day",
+      "2025-06-07": "Eid al-Adha",
+      "2025-06-11": "Kabirdas Jayanti",
+      "2025-11-03": "Diwali",
+      "2025-11-06": "Chhath Puja",
+      "2025-11-25": "Guru Nanak Jayanti"
+    };
+
+
+    
+
+    
+    // Set the active data pointers
+    let attendanceData = allCalendarsData[currentCalendarName].attendance;
+    let overtimeData = allCalendarsData[currentCalendarName].overtime;
+    let notesData = allCalendarsData[currentCalendarName].notes;
 
     // Load theme preference from localStorage
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
+    }
+
+    // Event listener for day selection (using event delegation)
+    calendarDays.addEventListener("click", function(event) {
+        const clickedDay = event.target.closest('.day');
+        if (clickedDay && !clickedDay.classList.contains('empty')) {
+            const clickedDateKey = clickedDay.dataset.date;
+            if (event.ctrlKey || event.metaKey) { // Allow Ctrl/Cmd + click for multi-select
+                if (selectedDays.has(clickedDateKey)) {
+                    selectedDays.delete(clickedDateKey);
+                    clickedDay.classList.remove('multi-selected', 'selected');
+                } else {
+                    selectedDays.add(clickedDateKey);
+                    clickedDay.classList.add('multi-selected');
+                    // Ensure 'selected' class is only on a single day if it's the only one selected
+                    if (selectedDays.size === 1) {
+                         document.querySelectorAll('.day.selected').forEach(d => d.classList.remove('selected'));
+                         clickedDay.classList.add('selected');
+                    } else {
+                         document.querySelectorAll('.day.selected').forEach(d => d.classList.remove('selected'));
+                    }
+                }
+            } else { // Single click behavior
+                // If the clicked day is already selected, unselect it. Otherwise, select only it.
+                if (selectedDays.has(clickedDateKey) && selectedDays.size === 1) {
+                    selectedDays.clear();
+                    clickedDay.classList.remove('multi-selected', 'selected');
+                } else {
+                    clearAllSelections(); // Clear all previous selections
+                    selectedDays.add(clickedDateKey);
+                    clickedDay.classList.add('selected');
+                }
+            }
+        }
+    });
+
+    /**
+     * Saves the entire allCalendarsData object to localStorage.
+     */
+    function saveAllCalendarsData() {
+        localStorage.setItem('allCalendarsData', JSON.stringify(allCalendarsData));
+        localStorage.setItem('currentCalendarName', currentCalendarName); // Also save current calendar name
     }
 
     /**
@@ -727,7 +997,7 @@
      */
     function generateCalendar(month, year) {
       calendarDays.innerHTML = "";
-      selectedDays.clear(); // Clear selections when month changes
+      clearAllSelections(); // Clear selections when month changes
 
       // Add day names (Sun, Mon, Tue...)
       dayNames.forEach(day => {
@@ -764,45 +1034,23 @@
           day.classList.add("today");
         }
 
-       
-
-
- // Apply 'sunday' class
+// Apply 'sunday' class
         const dayOfWeek = new Date(year, month, i).getDay();
         if (dayOfWeek === 0) { // 0 represents Sunday
             day.classList.add("sunday");
         }
         
-        // Apply saved attendance status (present, absent, holiday, halfday, leave)
+        // Apply saved attendance status (present, absent, holiday, halfday, leave) for the current calendar
         if (attendanceData[dateKey]) {
           day.classList.add(attendanceData[dateKey]);
         }
         
-        // Add click event listener for day selection
-        day.addEventListener("click", function() {
-          const clickedDateKey = this.dataset.date;
-          if (selectedDays.has(clickedDateKey)) {
-            selectedDays.delete(clickedDateKey);
-            this.classList.remove('multi-selected', 'selected'); // Remove both
-          } else {
-            selectedDays.add(clickedDateKey);
-            this.classList.add('multi-selected');
-            // If only one day is selected, also apply 'selected' class
-            if (selectedDays.size === 1) {
-                this.classList.add('selected');
-            } else {
-                // If more than one day is selected, ensure no single 'selected' class remains
-                document.querySelectorAll('.day.selected').forEach(d => d.classList.remove('selected'));
-            }
-          }
-        });
-        
-        // Add Overtime Indicator if data exists
+        // Add Overtime Indicator if data exists for the current calendar
         if (overtimeData[dateKey]) {
           addOvertimeIndicator(day, overtimeData[dateKey]);
         }
         
-        // Add Note Indicator if data exists
+        // Add Note Indicator if data exists for the current calendar
         if (notesData[dateKey]) {
           addNoteIndicator(day);
         }
@@ -811,6 +1059,8 @@
       }
 
       monthYear.textContent = `${monthNames[month]} ${year}`;
+      // Update the main title to show which calendar is active
+      document.querySelector('.attendance-title').innerHTML = `❤️ ${currentCalendarName}`;
     }
 
     /**
@@ -883,8 +1133,11 @@
         toggleMenu(); // Close sidebar after changing theme
     }
 
-    
-    // --- Bulk Action Functions ---
+
+
+
+
+// --- Bulk Action Functions ---
 
     /**
      * Updates the CSS classes and attendance data for a given day element.
@@ -918,7 +1171,7 @@
           attendanceData[dateKey] = status;
         }
       });
-      localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
+      saveAllCalendarsData(); // Save changes to the current calendar
       clearAllSelections(); // Clear selections after action
     }
     
@@ -938,8 +1191,8 @@
         
         const numericHours = parseFloat(hoursInput.trim());
 
-        if (isNaN(numericHours)) {
-             alert("Invalid input for overtime hours. Please enter a number (e.g., 2, 4.5).");
+        if (isNaN(numericHours) || numericHours < 0) {
+             alert("Invalid input for overtime hours. Please enter a non-negative number (e.g., 2, 4.5).");
              return;
         }
 
@@ -948,15 +1201,13 @@
             if (dayElement) {
                 if (numericHours > 0) {
                     overtimeData[dateKey] = numericHours;
-                    dayElement.classList.add('overtime'); // Add 'overtime' class for styling
                 } else {
                     delete overtimeData[dateKey];
-                    dayElement.classList.remove('overtime'); // Remove 'overtime' class
                 }
-                addOvertimeIndicator(dayElement, numericHours);
+                addOvertimeIndicator(dayElement, numericHours); // Update indicator based on new hours
             }
         });
-        localStorage.setItem('overtimeData', JSON.stringify(overtimeData));
+        saveAllCalendarsData(); // Save changes to the current calendar
         clearAllSelections();
     }
 
@@ -987,7 +1238,7 @@
                 }
             }
         });
-        localStorage.setItem('notesData', JSON.stringify(notesData));
+        saveAllCalendarsData(); // Save changes to the current calendar
         clearAllSelections();
     }
 
@@ -1017,7 +1268,7 @@
             const dayElement = document.querySelector(`.day[data-date="${dateKey}"]`);
             if (dayElement) {
                 // Remove all custom classes
-                dayElement.classList.remove('present', 'absent', 'holiday', 'overtime', 'halfday', 'leave');
+                dayElement.classList.remove('present', 'absent', 'holiday', 'halfday', 'leave');
                 
                 // Clear indicators and data
                 delete attendanceData[dateKey];
@@ -1033,9 +1284,7 @@
                 reapplyStaticDayClasses(dayElement);
             }
         });
-        localStorage.setItem('attendanceData', JSON.stringify(attendanceData));
-        localStorage.setItem('overtimeData', JSON.stringify(overtimeData));
-        localStorage.setItem('notesData', JSON.stringify(notesData));
+        saveAllCalendarsData(); // Save changes to the current calendar
         clearAllSelections();
     }
 
@@ -1074,7 +1323,6 @@
         }
     }
 
-
     // Month Summary Functions
     /**
      * Displays a summary of attendance, overtime, and notes for the current month.
@@ -1097,7 +1345,7 @@
       addSummaryItem(summaryContent, 'Leave', totals.leave, 'leave'); // Added Leave
       addSummaryItem(summaryContent, 'Holiday', totals.holiday, 'holiday');
       addSummaryItem(summaryContent, 'Overtime Days', totals.overtimeDays, 'overtime');
-      addSummaryItem(summaryContent, 'Total Overtime Hours', totals.totalOvertimeHours, 'overtime');
+      addSummaryItem(summaryContent, 'Total Overtime Hours', totals.totalOvertimeHours.toFixed(1), 'overtime'); // Format to 1 decimal
       addSummaryItem(summaryContent, 'Days with Notes', totals.notes, 'note');
       
       // Add total working days and attendance percentage
@@ -1110,7 +1358,7 @@
       const totalItem = document.createElement('div');
       totalItem.className = 'summary-total';
       totalItem.innerHTML = `
-        <span>Total Days: ${totalDaysInMonth}</span><br>
+        <span>Total Days in Month: ${totalDaysInMonth}</span><br>
         <span>Working Days (excl. holidays & Sundays): ${workingDays}</span><br>
         <span>Overall Attendance: ${attendancePercentage}%</span>
       `;
@@ -1187,7 +1435,8 @@
      */
     function addSummaryItem(container, label, value, type) {
       // Only show items with a value > 0, except for 'notes' which can be 0 but still relevant
-      if (value > 0 || (type === 'note' && value === 0)) { 
+      const alwaysShowTypes = ['notes', 'totalOvertimeHours'];
+      if (value > 0 || alwaysShowTypes.includes(type)) { 
         const item = document.createElement('div');
         item.className = 'summary-item';
         
@@ -1239,12 +1488,175 @@
       document.getElementById('overlay').classList.remove('show');
     }
 
-    // Close sidebar/summary/about when clicking outside
+    // --- Calendar Management Functions ---
+    const calendarModal = document.getElementById('calendarModal');
+    const newCalendarForm = document.getElementById('newCalendarForm');
+    const newCalendarNameInput = document.getElementById('newCalendarName');
+    const calendarList = document.getElementById('calendarList');
+
+    /**
+     * Opens the calendar management modal and loads existing calendars.
+     */
+    function showCalendarManager() {
+        renderCalendarList(); // Populate the list every time it opens
+        calendarModal.classList.add('show');
+        document.getElementById('overlay').classList.add('show');
+        toggleMenu(); // Close sidebar when calendar manager opens
+    }
+
+    /**
+     * Closes the calendar management modal.
+     */
+    function closeCalendarModal() {
+        calendarModal.classList.remove('show');
+        document.getElementById('overlay').classList.remove('show');
+        newCalendarNameInput.value = ''; // Clear input field
+    }
+
+
+
+
+  /**
+     * Handles creating a new calendar.
+     */
+    newCalendarForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const newName = newCalendarNameInput.value.trim();
+        if (newName === "") {
+            alert("Please enter a calendar name.");
+            return;
+        }
+        if (allCalendarsData[newName]) {
+            alert(`Calendar "${newName}" already exists. Please choose a different name.`);
+            return;
+        }
+
+        allCalendarsData[newName] = {
+            attendance: {},
+            overtime: {},
+            notes: {}
+        };
+        switchCalendar(newName); // Switch to the new calendar
+        saveAllCalendarsData();
+        renderCalendarList();
+        newCalendarNameInput.value = ''; // Clear input
+        alert(`New calendar "${newName}" created and activated!`);
+    });
+
+    /**
+     * Renders the list of saved calendars in the modal.
+     */
+    function renderCalendarList() {
+        calendarList.innerHTML = '';
+        const calendarNames = Object.keys(allCalendarsData);
+
+        if (calendarNames.length === 0) {
+            calendarList.innerHTML = '<p>No calendars saved yet. Create one above!</p>';
+            return;
+        }
+
+        calendarNames.forEach(name => {
+            const item = document.createElement('div');
+            item.className = 'calendar-list-item';
+            
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = name;
+            if (name === currentCalendarName) {
+                nameSpan.innerHTML += ' <span class="current-calendar-indicator">(Active)</span>';
+            }
+            item.appendChild(nameSpan);
+
+            const buttonsDiv = document.createElement('div');
+
+            if (name !== currentCalendarName) { // Don't show switch button for active calendar
+                const switchBtn = document.createElement('button');
+                switchBtn.className = 'btn-switch';
+                switchBtn.textContent = 'Switch';
+                switchBtn.onclick = () => switchCalendar(name);
+                buttonsDiv.appendChild(switchBtn);
+            }
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'btn-delete';
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.onclick = () => deleteCalendar(name);
+            buttonsDiv.appendChild(deleteBtn);
+
+            item.appendChild(buttonsDiv);
+            calendarList.appendChild(item);
+        });
+    }
+
+    /**
+     * Switches to a different calendar.
+     * @param {string} name - The name of the calendar to switch to.
+     */
+    function switchCalendar(name) {
+        if (!allCalendarsData[name]) {
+            alert(`Calendar "${name}" not found.`);
+            return;
+        }
+        currentCalendarName = name;
+        attendanceData = allCalendarsData[currentCalendarName].attendance;
+        overtimeData = allCalendarsData[currentCalendarName].overtime;
+        notesData = allCalendarsData[currentCalendarName].notes;
+        saveAllCalendarsData(); // Update localStorage with new currentCalendarName
+        generateCalendar(currentMonth, currentYear); // Re-render calendar with new data
+        closeCalendarModal(); // Close the modal
+        alert(`Switched to calendar: "${name}"`);
+    }
+
+    /**
+     * Deletes a calendar after confirmation.
+     * @param {string} name - The name of the calendar to delete.
+     */
+    function deleteCalendar(name) {
+        if (name === 'Default Calendar' && Object.keys(allCalendarsData).length > 1) {
+            alert("The 'Default Calendar' cannot be deleted if other calendars exist. Please switch to another calendar first if you wish to delete it.");
+            return;
+        }
+
+        if (Object.keys(allCalendarsData).length === 1) {
+            // If only one calendar exists, prompt to clear data rather than delete
+            const confirmClearAll = confirm(`Are you sure you want to clear ALL data from "${name}"? This is the only calendar remaining.`);
+            if (confirmClearAll) {
+                allCalendarsData[name] = {
+                    attendance: {},
+                    overtime: {},
+                    notes: {}
+                };
+                attendanceData = allCalendarsData[currentCalendarName].attendance; // Reset pointers
+                overtimeData = allCalendarsData[currentCalendarName].overtime;
+                notesData = allCalendarsData[currentCalendarName].notes;
+                saveAllCalendarsData();
+                generateCalendar(currentMonth, currentYear);
+                renderCalendarList();
+                alert(`All data from "${name}" has been cleared.`);
+            }
+            return;
+        }
+
+        if (name === currentCalendarName) {
+            alert("You cannot delete the currently active calendar. Please switch to another calendar first.");
+            return;
+        }
+
+        const confirmDelete = confirm(`Are you sure you want to permanently delete calendar "${name}" and all its data? This action cannot be undone.`);
+        if (confirmDelete) {
+            delete allCalendarsData[name];
+            saveAllCalendarsData();
+            renderCalendarList(); // Refresh list after deletion
+            alert(`Calendar "${name}" deleted.`);
+        }
+    }
+
+    // Close sidebar/summary/about/calendar modals when clicking outside
     document.addEventListener('click', function(event) {
       const sidebar = document.getElementById('sidebar');
       const hamburger = document.querySelector('.hamburger');
       const summaryModal = document.getElementById('summaryModal');
-      const aboutModal = document.getElementById('aboutModal'); // Added
+      const aboutModal = document.getElementById('aboutModal');
+      const calendarModal = document.getElementById('calendarModal'); // Added
       const overlay = document.getElementById('overlay');
       
       // Close sidebar if clicked outside and it's open
@@ -1257,11 +1669,39 @@
         closeSummary();
       }
 
-      // Close about modal if clicked outside and it's open (Added)
+      // Close about modal if clicked outside and it's open
       if (aboutModal.classList.contains('show') && event.target === overlay) {
         closeAboutModal();
       }
+
+      // Close calendar modal if clicked outside and it's open
+      if (calendarModal.classList.contains('show') && event.target === overlay) {
+        closeCalendarModal();
+      }
     });
+
+   
+/**
+     * Function to start the heart rain animation.
+     */
+    function startHeartRain() {
+      const container = document.getElementById("heart-container");
+
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "❤️";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.top = "-30px";
+        heart.style.animationDuration = (Math.random() * 2 + 1) + "s";
+        container.appendChild(heart);
+
+        setTimeout(() => {
+          heart.remove();
+        }, 3000); // Remove heart after 3 seconds (animation duration + a bit extra)
+      }
+    }
+
 
     // Initialize calendar on page load
     generateCalendar(currentMonth, currentYear);
@@ -1271,6 +1711,3 @@
 
 
 
-
-
- 
