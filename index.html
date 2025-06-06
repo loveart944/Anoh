@@ -2760,3 +2760,47 @@ this.shareAppBtn.addEventListener('click', () => {
 </body>
 </html>
 
+
+
+<!-- Monthly Summary Function Fix -->
+<script>
+  class AttendanceCalendar {
+    // ... (your existing methods and constructor)
+
+    showMonthSummary() {
+      const summary = {
+        present: 0,
+        absent: 0,
+        holiday: 0,
+        halfDay: 0,
+        leave: 0,
+        emergency: 0,
+        sick: 0,
+        shift: 0,
+        vacation: 0
+      };
+
+      const monthKey = `${this.currentDate.getMonth()}-${this.currentDate.getFullYear()}`;
+      const monthData = this.calendars[this.activeCalendar]?.[monthKey] || {};
+
+      for (const day in monthData) {
+        const status = monthData[day]?.status;
+        if (status && summary[status] !== undefined) {
+          summary[status]++;
+        }
+      }
+
+      alert(
+        `Monthly Summary:\n\n` +
+        `Present: ${summary.present}\n` +
+        `Absent: ${summary.absent}\n` +
+        `Holiday: ${summary.holiday}\n` +
+        `Half Day: ${summary.halfDay}\n` +
+        `Leave: ${summary.leave}\n` +
+        `Emergency: ${summary.emergency}\n` +
+        `Sick: ${summary.sick}\n` +
+        `Vacation: ${summary.vacation}`
+      );
+    }
+  }
+</script>
