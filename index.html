@@ -12,16 +12,13 @@
     :root {
       --color-primary: #4361ee;
       --color-secondary: #3f37c9;
-      --color-present: #18a5a7;
-      --color-absent: #fb8e6a;
-      --color-holiday: #ff99cc;
+      --color-present: #2ecc71;
+      --color-absent: #e74c3c;
+      --color-holiday: #54acbf;
       --color-overtime: #f39c12;
-      --color-clear: #968b55;
-      --color-half-day: #57370d;
-      --color-leave: #1b262a;
-      --color-emergency: #970d1a;
-      --color-sick: #5761b2;
-      --color-festival: #ff9e01; /* New: Festival color */
+      --color-clear: #bdc3c7;
+      --color-half-day: #8e44ad; /* New: Half Day color */
+      --color-leave: #34495e;    /* New: Leave color */
       --color-sunday: #e2ceb1;
       --color-text-dark: #2b2d42;
       --color-text-light: #ffffff;
@@ -223,20 +220,16 @@
       z-index: 2;
     }
 
-
-
- .day.present { background-color: var(--color-present); color: white; }
+    .day.present { background-color: var(--color-present); color: white; }
     .day.absent { background-color: var(--color-absent); color: white; }
     .day.holiday { background-color: var(--color-holiday); color: white; }
     .day.half-day { background-color: var(--color-half-day); color: white; }
     .day.leave { background-color: var(--color-leave); color: white; }
     /* New status colors */
-    .day.emergency { background-color: var(--color-emergency); color: white; }
-    .day.sick { background-color: var(--color-sick); color: white; }
-    .day.festival { background-color: var(--color-festival); color: white; }
-    
-    
-    }
+    .day.emergency { background-color: #e74c3c; color: white; } /* Re-using absent color, or define new var */
+    .day.sick { background-color: #1abc9c; color: white; } /* Teal-like */
+    .day.shift { background-color: #3498db; color: white; } /* Blue-like */
+    .day.vacation { background-color: #f1c40f; color: white; } /* Yellow/Orange */
 
 
     .day.current-day::after {
@@ -256,7 +249,7 @@
       bottom: 1px;
       right: 1px;
       font-size: 0.79rem;
-      background: black;
+      background: var(--color-overtime);
       color: white;
       border-radius: 50%;
       width: 17px;
@@ -267,33 +260,11 @@
       font-weight: 700;
       box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
-
-    /* Shift Indicator */
-    .shift-badge {
-      position: absolute;
-      top: 1px;
-      right: 1px;
-      font-size: 0.79rem;
-      background: black; /* Black color for shift indicator */
-      color: white;
-      border-radius: 50%;
-      width: 17px;
-      height: 17px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-    }
-   
-   .hidden {
-       display: none;
-     }
 
     .note-indicator {
       position: absolute;
       top: 1px;
-      right: 28px;
+      right: 1px; /* Moved to far right */
       font-size: 0.6rem;
       background: var(--color-primary);
       color: white;
@@ -303,7 +274,27 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 5;
     }
+
+    .shift-indicator {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      font-size: 0.75rem;
+      background: #8e44ad; /* Distinct color for shift */
+      color: white;
+      border-radius: 50%;
+      width: 17px;
+      height: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      z-index: 5;
+    }
+
 
     .action-button-wrapper {
       display: flex;
@@ -317,18 +308,18 @@
 
     .btn-action {
       flex: 1 1 calc(25% - 10px); /* 4 per row */
-      height: 50px;
+      height: 40px;
       padding: 8px;
       font-size: 12px;
       border: none;
-      border-radius: 14px;
+      border-radius: 12px;
       color: white;
       font-weight: 600;
       text-align: center;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
 
     .button {
@@ -357,19 +348,20 @@
       color: white;
     }
 
-    .btn-present { background: linear-gradient(135deg, #18a5a7, #bfffc7); }
-    .btn-absent { background: linear-gradient(135deg, #451e61, #fb8e6a); }
-    .btn-holiday { background: linear-gradient(135deg, #33ccff, #ff99cc); }
-    .btn-clear { background: linear-gradient(135deg, #968b55, #515719); }
-    .btn-note { background: linear-gradient(135deg, #f6efa7, #ff0078); }
-    .btn-overtime { background: linear-gradient(135deg, #e3ff73, #e27c39); }
-    .btn-half-day { background: linear-gradient(135deg, #ffe998, #57370d); }
-    .btn-leave { background: linear-gradient(135deg, #ed8761, #1b262a); }
+    .btn-present { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+    .btn-absent { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .btn-holiday { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .btn-clear { background: linear-gradient(135deg, #7f8c8d, #6c7a7d); }
+    .btn-note { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+    .btn-overtime { background: linear-gradient(135deg, #f39c12, #e67e22); }
+    .btn-half-day { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+    .btn-leave { background: linear-gradient(135deg, #34495e, #2c3e50); }
     /* New button styles */
-    .btn-emergency { background: linear-gradient(135deg, #ff5450, #460645); }
-    .btn-sick { background: linear-gradient(135deg, #5761b2, #1fc5a8); }
-    .btn-shift { background: linear-gradient(135deg, #30e9ff, #0d0551); }
-    .btn-festival { background: linear-gradient(135deg, #ff9e01, #5f0b95); } /* Updated gradient for festival */
+    .btn-emergency { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+    .btn-sick { background: linear-gradient(135deg, #1abc9c, #16a085); }
+    .btn-shift { background: linear-gradient(135deg, #3498db, #2980b9); }
+    .btn-vacation { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+
 
 
     .btn-month-summary {
@@ -575,9 +567,7 @@
       box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
     }
 
-
-
-   .modal-actions {
+    .modal-actions {
       display: flex;
       justify-content: center;
       gap: 15px;
@@ -658,6 +648,7 @@
     .day.updated {
       animation: pulse 0.5s ease;
     }
+
 
     /* Side Menu Styles */
     .side-menu {
@@ -791,7 +782,6 @@
       border-bottom: none;
     }
 
-
     .holiday-name {
       font-weight: 600;
       color: var(--color-text-dark);
@@ -806,7 +796,11 @@
       text-align: right;
     }
 
-    /* Birthday Reminder Screen Styles */
+
+
+
+
+/* Birthday Reminder Screen Styles */
     .birthday-form-card {
       background: var(--color-card);
       padding: 20px;
@@ -847,7 +841,6 @@
       cursor: pointer;
       transition: all 0.3s ease;
     }
-
 
     .birthday-form-card button:hover {
       transform: translateY(-2px);
@@ -891,7 +884,6 @@
       margin-right: 8px;
       color: var(--color-secondary);
     }
-
 
     .delete-birthday-btn {
       position: absolute;
@@ -1210,7 +1202,7 @@
       box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
     }
 
-    .calendar-form-card button {
+.calendar-form-card button {
       width: 100%;
       padding: 12px 20px;
       background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
@@ -1311,16 +1303,40 @@
         pointer-events: none; /* Disable delete for active calendar */
         opacity: 0.3;
     }
+
+    /* Shift Options Specific Styles */
+    .shift-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); /* Two columns */
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn-shift-option {
+        padding: 10px 15px;
+        font-size: 0.95rem;
+        background: var(--color-primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-shift-option:hover {
+        background: var(--color-secondary);
+        transform: translateY(-2px);
+    }
+
+    /* Styles for general modal buttons, ensuring they fit */
+    .modal-actions .btn-modal {
+        flex: 1; /* Allow buttons to grow */
+        max-width: 150px; /* Max width for consistency */
+    }
   </style>
 </head>
 <body>
-
-
-
-
-
-
- <nav class="side-menu" id="sideMenu">
+  <nav class="side-menu" id="sideMenu">
     <ul>
       <li><a href="#" id="myProfileBtn"><i class="fas fa-user"></i> My Profile</a></li>
       <li><a href="#" id="calendarActivitiesBtn"><i class="fas fa-plus-circle"></i> Calendar Activities</a></li>
@@ -1337,8 +1353,7 @@
       <div class="logo-icon">
         <i class="fas fa-calendar-alt"></i>
       </div>
-      <h1 class="title">Attendance Calendar</h1>
-    </div>
+      <h1 class="title">Attendance Calendar</h1> </div>
     <div class="menu-bar" id="menuToggle">
       <i class="fas fa-bars"></i>
     </div>
@@ -1413,18 +1428,17 @@
         <span>Sick</span>
       </button>
 
-      <button class="btn-action btn-shift" id="shiftBtn"> <i class="fas fa-random"></i>
+      <button class="btn-action btn-shift" data-status="shift" id="shiftBtn">
+        <i class="fas fa-random"></i>
         <span>Shift</span>
       </button>
 
-      <button class="btn-action btn-festival" data-status="festival">
-        <i class="fas fa-gift"></i>
-        <span>Festival</span>
+      <button class="btn-action btn-vacation" data-status="vacation">
+        <i class="fas fa-suitcase-rolling"></i>
+        <span>Vacation</span>
       </button>
     </div>
   </main>
-
-
 
   <div class="day-details" id="dayDetails">
     <div class="day-details-header">
@@ -1451,6 +1465,29 @@
       <div class="modal-actions">
         <button class="btn-modal btn-cancel" id="cancelOvertime">Cancel</button>
         <button class="btn-modal btn-save" id="saveOvertime">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="shiftModal">
+    <div class="overtime-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Select Shift Type</h3>
+        <button class="close-modal" id="closeShiftModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="shift-options">
+        <button class="btn-modal btn-shift-option" data-shift-type="M">Morning (M)</button>
+        <button class="btn-modal btn-shift-option" data-shift-type="A">Afternoon (A)</button>
+        <button class="btn-modal btn-shift-option" data-shift-type="E">Evening (E)</button>
+        <button class="btn-modal btn-shift-option" data-shift-type="N">Night (N)</button>
+        <button class="btn-modal btn-shift-option" data-shift-type="G">General (G)</button>
+        <button class="btn-modal btn-shift-option" data-shift-type="S1">Shift 1 (S1)</button>
+        <button class="btn-modal btn-shift-option" data-shift-type="S2">Shift 2 (S2)</button>
+      </div>
+      <div class="modal-actions" style="margin-top: 20px;">
+        <button class="btn-modal btn-cancel" id="cancelShift">Cancel</button>
       </div>
     </div>
   </div>
@@ -1609,7 +1646,7 @@
 
 
 
- <script>
+<script>
     class AttendanceCalendar {
       constructor() {
         // Initialize properties by getting elements from the DOM
@@ -1627,7 +1664,6 @@
         this.clearDayBtn = document.getElementById('clearDayBtn');
         this.noteBtn = document.getElementById('noteBtn');
         this.overtimeBtn = document.getElementById('overtimeBtn');
-        this.shiftBtn = document.getElementById('shiftBtn'); // Corrected to get by ID
 
         this.dayDetails = document.getElementById('dayDetails');
         this.dayDetailsTitle = document.getElementById('dayDetailsTitle');
@@ -1641,6 +1677,13 @@
         this.closeOvertimeModal = document.getElementById('closeOvertimeModal');
         this.cancelOvertime = document.getElementById('cancelOvertime');
         this.saveOvertime = document.getElementById('saveOvertime');
+
+        // Shift Modal elements
+        this.shiftModal = document.getElementById('shiftModal');
+        this.closeShiftModal = document.getElementById('closeShiftModal');
+        this.cancelShift = document.getElementById('cancelShift');
+        this.shiftOptionButtons = document.querySelectorAll('.btn-shift-option');
+        this.shiftBtn = document.getElementById('shiftBtn');
 
         this.sideMenu = document.getElementById('sideMenu');
         this.menuToggle = document.getElementById('menuToggle');
@@ -1712,19 +1755,16 @@
         this.setupCalendar();
         this.renderHolidays(); // Render holidays on initialization
 
-        // Add event listeners for all status buttons, excluding 'shift'
-        // MODIFIED: 'shift' is now handled separately so it doesn't apply a generic status
+        // Add event listeners for all status buttons
         document.querySelectorAll('.btn-action[data-status]').forEach(button => {
           button.addEventListener('click', (event) => {
             const status = event.currentTarget.dataset.status;
-            this.applyStatusToSelectedDays(status);
+            // Only apply status if it's not the shift button
+            if (status !== 'shift') {
+              this.applyStatusToSelectedDays(status);
+            }
           });
         });
-
-        // Event listener for the new Shift button
-        if (this.shiftBtn) {
-            this.shiftBtn.addEventListener('click', () => this.promptForShiftType());
-        }
 
         this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
         this.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
@@ -1733,11 +1773,23 @@
         this.noteBtn.addEventListener('click', () => this.showDayDetails());
         this.overtimeBtn.addEventListener('click', () => this.showOvertimeModal());
 
+        // Shift button and modal listeners
+        this.shiftBtn.addEventListener('click', () => this.showShiftModal());
+        this.closeShiftModal.addEventListener('click', () => this.hideShiftModal());
+        this.cancelShift.addEventListener('click', () => this.hideShiftModal());
+        this.shiftOptionButtons.forEach(button => {
+            button.addEventListener('click', (event) => {
+                const shiftType = event.currentTarget.dataset.shiftType;
+                this.applyShiftToSelectedDays(shiftType);
+            });
+        });
+
         this.saveDayNoteBtn.addEventListener('click', () => this.saveDayNote());
         this.closeDayDetailsBtn.addEventListener('click', () => this.hideDayDetails());
         this.overlay.addEventListener('click', () => {
           this.hideDayDetails();
           this.hideOvertimeModal();
+          this.hideShiftModal(); // Close shift modal if overlay is clicked
           this.toggleMenu(); // Close side menu if overlay is clicked
         });
 
@@ -1800,7 +1852,9 @@
           this.appThemeBtn.addEventListener('click', () => alert("App Theme functionality coming soon!"));
         }
         if (this.shareAppBtn) {
-          this.shareAppBtn.addEventListener('click', () => {
+
+
+this.shareAppBtn.addEventListener('click', () => {
             if (navigator.share) {
               navigator.share({
                 title: 'Attendance Calendar App',
@@ -1820,10 +1874,9 @@
           this.aboutBtn.addEventListener('click', () => alert("Attendance Calendar v1.0. Developed by [Your Name/Company]."));
         }
 
- // Event Listeners for My Profile Screen
+        // Event Listeners for My Profile Screen
         if (this.myProfileBtn) {
-          
-this.myProfileBtn.addEventListener('click', (e) => {
+          this.myProfileBtn.addEventListener('click', (e) => {
             e.preventDefault();
             this.toggleMenu();
             this.showScreen(this.profileScreen);
@@ -1843,8 +1896,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
             this.profileNameInput.addEventListener('input', () => this.updateProfileInitial());
         }
 
-
-  // Event Listeners for Calendar Activities Screen
+        // Event Listeners for Calendar Activities Screen
         if (this.calendarActivitiesBtn) {
             this.calendarActivitiesBtn.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -1863,13 +1915,11 @@ this.myProfileBtn.addEventListener('click', (e) => {
 
       setupCalendar() {
         if (!this.calendars[this.activeCalendar]) {
-          // This case should ideally not happen if 'Default' is guaranteed to exist,
-          // but good for robustness if activeCalendar points to a deleted one.
           this.activeCalendar = "Default";
           this.saveData();
         }
         this.renderCalendar();
-        this.updateTopBarTitle(); // Ensure top bar title is updated when calendar is setup
+        this.updateTopBarTitle();
       }
 
       renderCalendar() {
@@ -1907,24 +1957,12 @@ this.myProfileBtn.addEventListener('click', (e) => {
             dayCell.classList.add('current-day');
           }
 
-          // Apply status, overtime, and note indicators
+          // Apply status, overtime, note, and shift indicators
           const dayData = this.getDayData(day);
           if (dayData) {
-            // Apply the primary status class
             if (dayData.status) {
                 dayCell.classList.add(dayData.status);
             }
-
-            // If it's a shift day, add the shift-base class (for styling)
-            // and the shift badge with the specific shift type
-            if (dayData.shiftType) {
-                dayCell.classList.add('shift-base'); // This can provide a base color for shift days
-                const shiftBadge = document.createElement('span');
-                shiftBadge.className = 'shift-badge';
-                shiftBadge.textContent = dayData.shiftType;
-                dayCell.appendChild(shiftBadge);
-            }
-
 
             if (dayData.overtime) {
               const overtimeBadge = document.createElement('span');
@@ -1938,6 +1976,14 @@ this.myProfileBtn.addEventListener('click', (e) => {
               noteIndicator.className = 'note-indicator';
               noteIndicator.innerHTML = '<i class="fas fa-pen"></i>';
               dayCell.appendChild(noteIndicator);
+            }
+
+            // Add Shift indicator
+            if (dayData.shift) {
+              const shiftIndicator = document.createElement('span');
+              shiftIndicator.className = 'shift-indicator';
+              shiftIndicator.textContent = dayData.shift;
+              dayCell.appendChild(shiftIndicator);
             }
           }
 
@@ -1954,8 +2000,10 @@ this.myProfileBtn.addEventListener('click', (e) => {
 
       // Toggles selection of a day
       toggleDaySelection(dayCell, day, event) {
-        // Prevent selection if day details or overtime modal is active
-        if (this.dayDetails.classList.contains('active') || this.overtimeModal.classList.contains('active')) {
+        // Prevent selection if any modal is active
+        if (this.dayDetails.classList.contains('active') ||
+            this.overtimeModal.classList.contains('active') ||
+            this.shiftModal.classList.contains('active')) {
             return;
         }
 
@@ -1976,6 +2024,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
         if (this.selectedDays.length === 0) {
             this.hideDayDetails();
             this.hideOvertimeModal();
+            this.hideShiftModal();
         }
       }
 
@@ -2004,24 +2053,27 @@ this.myProfileBtn.addEventListener('click', (e) => {
         }
 
         const existingData = this.calendars[this.activeCalendar][monthYearKey][day] || {};
-        const updatedData = { ...existingData, ...data }; // Merge new data with existing data
+        const updatedData = { ...existingData, ...data };
 
-        // Clean up data: remove empty/undefined values
-        for (const key in updatedData) {
-            if (updatedData[key] === undefined || updatedData[key] === null || updatedData[key] === '') {
-                delete updatedData[key];
+        // Clean up data: remove empty/undefined values for status, overtime, note, and shift
+        if (!updatedData.status && !updatedData.overtime && !updatedData.note && !updatedData.shift) {
+            delete this.calendars[this.activeCalendar][monthYearKey][day];
+        } else {
+            // Filter out undefined/null/empty string values from updatedData
+            for (const key in updatedData) {
+                if (updatedData[key] === undefined || updatedData[key] === null || updatedData[key] === '') {
+                    delete updatedData[key];
+                }
+            }
+            if (Object.keys(updatedData).length === 0) {
+                delete this.calendars[this.activeCalendar][monthYearKey][day];
+            } else {
+                this.calendars[this.activeCalendar][monthYearKey][day] = updatedData;
             }
         }
 
-        if (Object.keys(updatedData).length === 0) {
-            delete this.calendars[this.activeCalendar][monthYearKey][day];
-        } else {
-            this.calendars[this.activeCalendar][monthYearKey][day] = updatedData;
-        }
+        this.saveData();
 
-        this.saveData(); // Save data to localStorage
-
-        // Add 'updated' class for a brief animation
         const dayCellElement = this.calendarGrid.querySelector(`.day[data-day="${day}"]`);
         if (dayCellElement && !dayCellElement.classList.contains('empty-day')) {
             dayCellElement.classList.add('updated');
@@ -2029,7 +2081,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
         }
       }
 
-   // Gets formatted month and year string
+      // Gets formatted month and year string
       getFormattedMonthYear() {
         return this.currentDate.toLocaleString('default', {
           month: 'long',
@@ -2037,7 +2089,10 @@ this.myProfileBtn.addEventListener('click', (e) => {
         });
       }
 
-      // Saves all application data to localStorage
+
+
+
+  // Saves all application data to localStorage
       saveData() {
         localStorage.setItem("calendars", JSON.stringify(this.calendars));
         localStorage.setItem("activeCalendar", this.activeCalendar);
@@ -2059,7 +2114,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
                 status: status,
                 overtime: currentData.overtime,
                 note: currentData.note,
-                shiftType: undefined // Clear shiftType if applying a non-shift status
+                shift: currentData.shift
             };
             this.setDayData(day, newData);
         });
@@ -2069,7 +2124,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
         this.renderCalendar();
       }
 
-      // Clears status, overtime, and notes for selected days
+      // Clears status, overtime, notes, and shift for selected days
       clearSelectedDays() {
         if (this.selectedDays.length === 0) {
           alert("कृपया कम से कम एक दिन चुनें!"); // Please select at least one day!
@@ -2081,7 +2136,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
                 status: undefined,
                 overtime: undefined,
                 note: undefined,
-                shiftType: undefined
+                shift: undefined // Clear shift data
             });
         });
         this.clearSelectionVisuals();
@@ -2102,7 +2157,6 @@ this.myProfileBtn.addEventListener('click', (e) => {
         this.overtimeInput.value = currentData.overtime || '';
         this.overtimeModal.classList.add('active');
         this.overlay.classList.add('active');
-        this.overtimeInput.focus();
         document.body.style.overflow = 'hidden'; // Prevent body scroll
       }
 
@@ -2141,6 +2195,45 @@ this.myProfileBtn.addEventListener('click', (e) => {
         this.hideOvertimeModal();
       }
 
+      // Shows the shift selection modal
+      showShiftModal() {
+          if (this.selectedDays.length === 0) {
+              alert("कृपया कम से कम एक दिन चुनें!"); // Please select at least one day!
+              return;
+          }
+          this.shiftModal.classList.add('active');
+          this.overlay.classList.add('active');
+          document.body.style.overflow = 'hidden'; // Prevent body scroll
+      }
+
+      // Hides the shift selection modal
+      hideShiftModal() {
+          this.shiftModal.classList.remove('active');
+          this.overlay.classList.remove('active');
+          this.clearSelectionVisuals(); // Clear selection after closing
+          this.selectedDays = [];
+          this.renderCalendar(); // Re-render to clear visual indicators
+          document.body.style.overflow = ''; // Restore body scroll
+      }
+
+      // Applies a selected shift type to all selected days
+      applyShiftToSelectedDays(shiftType) {
+          if (this.selectedDays.length === 0) {
+              alert("कोई दिन नहीं चुना गया है।"); // No day selected.
+              return;
+          }
+
+          this.selectedDays.forEach(day => {
+              const currentData = this.getDayData(day) || {};
+              this.setDayData(day, {
+                  ...currentData,
+                  shift: shiftType // Save the shift type
+              });
+          });
+
+          this.hideShiftModal(); // Hide modal and re-render calendar
+      }
+
       // Shows the day details panel
       showDayDetails() {
         if (this.selectedDays.length === 0) {
@@ -2148,8 +2241,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
           return;
         }
 
-
-       const firstSelectedDay = this.selectedDays[0];
+        const firstSelectedDay = this.selectedDays[0];
         const dateStr = new Date(this.selectedYear, this.selectedMonth, firstSelectedDay).toLocaleDateString('hi-IN', {day: 'numeric', month: 'long', year: 'numeric'});
 
         if (this.selectedDays.length > 1) {
@@ -2196,49 +2288,13 @@ this.myProfileBtn.addEventListener('click', (e) => {
         this.hideDayDetails();
       }
 
-      // New: Prompt for Shift Type and apply it
-      promptForShiftType() {
-        if (this.selectedDays.length === 0) {
-            alert("कृपया कम से कम एक दिन चुनें!"); // Please select at least one day!
-            return;
-        }
-
-        const shiftOptions = "M (Morning), A (Afternoon), E (Evening), N (Night), G (General), S1, S2";
-        let shiftInput = prompt(`शिफ्ट प्रकार दर्ज करें (${shiftOptions}):\n\nउदाहरण: M, A, E, N, G, S1, S2`);
-
-        if (shiftInput === null) { // User cancelled the prompt
-            return;
-        }
-
-        shiftInput = shiftInput.trim().toUpperCase();
-
-        // Validate input
-        const validShifts = ['M', 'A', 'E', 'N', 'G', 'S1', 'S2'];
-        if (!validShifts.includes(shiftInput)) {
-            alert(`अमान्य शिफ्ट प्रकार। कृपया इनमें से चुनें: ${shiftOptions}`); // Invalid shift type. Please choose from:
-            return;
-        }
-
-        this.selectedDays.forEach(day => {
-            const currentData = this.getDayData(day) || {};
-            // MODIFIED: Retain existing status, but add or update shiftType
-            this.setDayData(day, {
-                ...currentData, // Keep existing status, note, overtime
-                shiftType: shiftInput
-            });
-        });
-
-        this.clearSelectionVisuals();
-        this.selectedDays = [];
-        this.renderCalendar();
-      }
-
       // Changes the displayed month
       changeMonth(offset) {
         this.currentDate.setMonth(this.currentDate.getMonth() + offset);
         this.selectedDays = [];
         this.hideDayDetails();
         this.hideOvertimeModal();
+        this.hideShiftModal(); // Ensure shift modal is hidden on month change
         this.renderCalendar();
         this.updateCurrentDayHighlight();
       }
@@ -2271,7 +2327,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
       showMonthSummary() {
         const monthYearKey = `${this.currentDate.getMonth()}-${this.currentDate.getFullYear()}`;
         const data = this.calendars[this.activeCalendar]?.[monthYearKey] || {};
-        let present = 0, absent = 0, holiday = 0, halfDay = 0, leave = 0, emergency = 0, sick = 0, shift = 0, festival = 0, overtime = 0;
+        let present = 0, absent = 0, holiday = 0, halfDay = 0, leave = 0, emergency = 0, sick = 0, shiftCount = 0, vacation = 0, overtime = 0;
 
         Object.values(data).forEach(entry => {
           if (entry.status === 'present') present++;
@@ -2279,18 +2335,18 @@ this.myProfileBtn.addEventListener('click', (e) => {
           if (entry.status === 'holiday') holiday++;
           if (entry.status === 'half-day') halfDay++;
           if (entry.status === 'leave') leave++;
-          if (entry.status === 'emergency') emergency++;
-          if (entry.status === 'sick') sick++;
-          if (entry.shiftType) shift++; // Count days with a shift type
-          if (entry.status === 'festival') festival++;
+          if (entry.status === 'emergency') emergency++; // Add new status
+          if (entry.status === 'sick') sick++;           // Add new status
+          if (entry.shift) shiftCount++;         // Count days with a shift
+          if (entry.status === 'vacation') vacation++;   // Add new status
           if (entry.overtime) overtime += parseFloat(entry.overtime);
         });
 
         const daysInMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0).getDate();
-        const totalRecordedDays = present + absent + holiday + halfDay + leave + emergency + sick + shift + festival;
+        const totalRecordedDays = present + absent + holiday + halfDay + leave + emergency + sick + vacation; // Shift is not a status that counts towards attendance directly
         const attendanceRate = totalRecordedDays > 0 ? Math.round((present / totalRecordedDays) * 100) : 0;
 
-        alert(`📊 ${this.getFormattedMonthYear()} के लिए महीने का सारांश:\n\n✅ उपस्थित: ${present} दिन\n🌓 आधा दिन: ${halfDay} दिन\n❌ अनुपस्थित: ${absent} दिन\n✈️ छुट्टी: ${leave} दिन\n🚨 आपातकालीन: ${emergency} दिन\n🤒 बीमार: ${sick} दिन\n🔄 शिफ्ट: ${shift} दिन\n🎉 त्योहार: ${festival} दिन\n⏱ ओवरटाइम: ${overtime.toFixed(1)} घंटे\n\n📈 उपस्थिति दर (चिह्नित उपस्थित/अनुपस्थित दिनों के आधार पर): ${attendanceRate}%`);
+        alert(`📊 ${this.getFormattedMonthYear()} के लिए महीने का सारांश:\n\n✅ उपस्थित: ${present} दिन\n🌓 आधा दिन: ${halfDay} दिन\n❌ अनुपस्थित: ${absent} दिन\n✈️ छुट्टी: ${leave} दिन\n🚨 आपातकालीन: ${emergency} दिन\n🤒 बीमार: ${sick} दिन\n🔄 शिफ्ट चिह्नित दिन: ${shiftCount} दिन\n🏖️ अवकाश: ${vacation} दिन\n🎉 अवकाश: ${holiday} दिन\n⏱ ओवरटाइम: ${overtime.toFixed(1)} घंटे\n\n📈 उपस्थिति दर (चिह्नित उपस्थित/अनुपस्थित दिनों के आधार पर): ${attendanceRate}%`);
       }
 
       // Toggles the side menu visibility
@@ -2318,6 +2374,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
         // Ensure any modals are hidden
         this.hideDayDetails();
         this.hideOvertimeModal();
+        this.hideShiftModal(); // Ensure shift modal is hidden when switching screens
         document.body.style.overflow = 'hidden'; // Prevent body scroll when a screen is active
       }
 
@@ -2328,7 +2385,8 @@ this.myProfileBtn.addEventListener('click', (e) => {
         document.body.style.overflow = ''; // Restore body scroll
       }
 
-      // Holiday Screen Functions
+
+// Holiday Screen Functions
       holidays2025 = [
         { name: "नया साल", date: "जनवरी 01, 2025" },
         { name: "मकर संक्रांति", date: "जनवरी 14, 2025" },
@@ -2443,8 +2501,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
             </button>
           `;
 
-
- const deleteBtn = bdayItem.querySelector('.delete-birthday-btn');
+          const deleteBtn = bdayItem.querySelector('.delete-birthday-btn');
           deleteBtn.addEventListener('click', () => this.deleteBirthday(bday.id));
 
           this.birthdaysListContainer.appendChild(bdayItem);
@@ -2460,8 +2517,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
         }
       }
 
-
-// Settings Functions
+      // Settings Functions
       loadSettings() {
         this.dailyReminderToggle.checked = this.settings.dailyReminder;
       }
@@ -2633,7 +2689,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
 
       deleteCalendar(nameToDelete) {
         if (Object.keys(this.calendars).length <= 1) {
-            alert("आप एकमात्र कैलेंडर को हटा नहीं सकते। कम से कम एक कैलेंडर आवश्यक है."); // You cannot delete the only calendar. At least one calendar is required.
+            alert("आप एकमात्र कैलेंडर को हटा नहीं सकते। कम से कम एक कैलेंडर आवश्यक है।"); // You cannot delete the only calendar. At least one calendar is required.
             return;
         }
         if (nameToDelete === this.activeCalendar) {
@@ -2657,6 +2713,7 @@ this.myProfileBtn.addEventListener('click', (e) => {
       setTimeout(() => {
         const today = new Date().getDate();
 
+
         // Add some initial demo data if localStorage is empty for the 'Default' calendar
         // Ensure 'Default' exists before trying to add data
         if (!calendar.calendars['Default'] || Object.keys(calendar.calendars['Default']).length === 0) {
@@ -2670,9 +2727,10 @@ this.myProfileBtn.addEventListener('click', (e) => {
             calendar.setDayData(7, {status: 'leave', note: 'पर्सनल लीव पर'}); // On personal leave
             calendar.setDayData(8, {status: 'emergency', note: 'आपातकालीन कार्य'}); // Emergency work
             calendar.setDayData(12, {status: 'sick', note: 'बीमार छुट्टी'}); // Sick leave
-            calendar.setDayData(18, {status: 'present', shiftType: 'N', note: 'नाइट शिफ्ट'}); // Changed: Set status to present, add shiftType
-            calendar.setDayData(22, {status: 'festival', note: 'पारिवारिक त्योहार'}); // Changed from 'vacation' to 'festival'
+            calendar.setDayData(18, {status: 'shift', note: 'नाइट शिफ्ट', shift: 'N'}); // Night shift with N indicator
+            calendar.setDayData(22, {status: 'vacation', note: 'परिवार के साथ छुट्टियां'}); // Vacation with family
         }
+
 
         // Add demo profile data if localStorage is empty
         if (!localStorage.getItem("userProfile") || !JSON.parse(localStorage.getItem("userProfile")).name) {
@@ -2701,5 +2759,4 @@ this.myProfileBtn.addEventListener('click', (e) => {
   </script>
 </body>
 </html>
-
 
