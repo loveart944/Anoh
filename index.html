@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Base Light Theme Variables */
     :root {
       --color-primary: #4361ee;
       --color-secondary: #3f37c9;
@@ -19,6 +20,7 @@
       --color-clear: #bdc3c7;
       --color-half-day: #8e44ad; /* New: Half Day color */
       --color-leave: #34495e;    /* New: Leave color */
+      --color-festival: #ff9e01; /* New: Festival color */
       --color-sunday: #e2ceb1;
       --color-text-dark: #2b2d42;
       --color-text-light: #ffffff;
@@ -31,6 +33,31 @@
       --footer-height: 80px;
       --safe-area-top: env(safe-area-inset-top, 0px);
       --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+      --gradient-bg: linear-gradient(135deg, #e0eafc, #cfdef3);
+      --header-gradient: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    }
+
+    /* Dark Theme Variables */
+    body.dark-theme {
+      --color-primary: #8d98ed; /* Lighter primary for contrast */
+      --color-secondary: #7a82e6; /* Lighter secondary */
+      --color-present: #27ae60;
+      --color-absent: #c0392b;
+      --color-holiday: #4a9cae;
+      --color-overtime: #d8870c;
+      --color-clear: #95a5a6;
+      --color-half-day: #773f91;
+      --color-leave: #2c3e50;
+      --color-festival: #e18c00;
+      --color-sunday: #a89a85;
+      --color-text-dark: #ecf0f1; /* Light text on dark bg */
+      --color-text-light: #2b2d42; /* Dark text for contrast elements if needed */
+      --color-bg: #343a40; /* Darker background */
+      --color-card: #495057; /* Darker card background */
+      --shadow-default: 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-active: 0 6px 16px rgba(0,0,0,0.4);
+      --gradient-bg: linear-gradient(135deg, #2c3e50, #34495e);
+      --header-gradient: linear-gradient(135deg, #2c3e50, #1a252f);
     }
 
     * {
@@ -42,13 +69,14 @@
 
     body {
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      background: var(--gradient-bg);
       color: var(--color-text-dark);
       min-height: 100vh;
       padding-top: var(--safe-area-top);
       padding-bottom: var(--safe-area-bottom);
       display: flex;
       flex-direction: column;
+      transition: background 0.3s ease, color 0.3s ease; /* Smooth theme transition */
     }
 
     /* Fixed header */
@@ -56,7 +84,7 @@
       display: flex;
       align-items: center;
       padding: 0 20px;
-      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      background: var(--header-gradient);
       height: var(--header-height);
       box-shadow: var(--shadow-default);
       position: fixed;
@@ -64,6 +92,7 @@
       left: 0;
       right: 0;
       z-index: 100;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .logo {
@@ -74,7 +103,7 @@
 
     .logo-icon {
       font-size: 24px;
-      color: white;
+      color: var(--color-text-light);
       background: rgba(255, 255, 255, 0.2);
       width: 36px;
       height: 36px;
@@ -87,14 +116,14 @@
     .title {
       font-weight: 700;
       font-size: 1.25rem;
-      color: white;
+      color: var(--color-text-light);
       letter-spacing: -0.5px;
     }
 
     .menu-bar {
       font-size: 1.8rem;
       cursor: pointer;
-      color: white;
+      color: var(--color-text-light);
       margin-left: auto;
     }
 
@@ -120,6 +149,7 @@
       margin-bottom: 20px;
       position: relative;
       z-index: 1;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .calendar-header {
@@ -148,6 +178,15 @@
       background: rgba(67, 97, 238, 0.2);
       transform: scale(1.05);
     }
+
+    body.dark-theme .btn-nav-month {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--color-text-dark);
+    }
+    body.dark-theme .btn-nav-month:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
 
     .month-year-display {
       font-family: 'Poppins', sans-serif;
@@ -189,7 +228,7 @@
       font-weight: 600;
       height: 47px;
       color: var(--color-text-dark);
-      transition: all 0.2s ease;
+      transition: all 0.2s ease, background-color 0.3s ease;
       font-size: 1.2rem;
       border: 2px solid transparent;
       min-width: 35px;
@@ -205,6 +244,10 @@
       background: rgba(226, 206, 177, 0.3);
       color: #c44512;
     }
+    body.dark-theme .day.sunday {
+        background: rgba(168, 154, 133, 0.3);
+        color: #f7a87e; /* Lighter red-orange for dark theme */
+    }
 
     /* Empty day styles */
     .day.empty-day {
@@ -219,6 +262,9 @@
       transform: scale(1.05);
       z-index: 2;
     }
+    body.dark-theme .day.selected {
+        box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.2);
+    }
 
     .day.present { background-color: var(--color-present); color: white; }
     .day.absent { background-color: var(--color-absent); color: white; }
@@ -229,7 +275,7 @@
     .day.emergency { background-color: #e74c3c; color: white; } /* Re-using absent color, or define new var */
     .day.sick { background-color: #1abc9c; color: white; } /* Teal-like */
     .day.shift { background-color: #3498db; color: white; } /* Blue-like */
-    .day.vacation { background-color: #f1c40f; color: white; } /* Yellow/Orange */
+    .day.festival { background-color: #f1c40f; color: white; } /* Yellow/Orange */
 
 
     .day.current-day::after {
@@ -244,7 +290,8 @@
       border-radius: 2px;
     }
 
-    .overtime-badge {
+
+  .overtime-badge {
       position: absolute;
       bottom: 1px;
       right: 1px;
@@ -259,6 +306,10 @@
       justify-content: center;
       font-weight: 700;
       box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    body.dark-theme .overtime-badge {
+        background: #eee;
+        color: var(--color-text-light); /* Darker text */
     }
 
     .note-indicator {
@@ -275,6 +326,9 @@
       align-items: center;
       justify-content: center;
       z-index: 5;
+    }
+    body.dark-theme .note-indicator {
+        background: var(--color-primary);
     }
 
     .shift-indicator {
@@ -360,8 +414,7 @@
     .btn-emergency { background: linear-gradient(135deg, #e74c3c, #c0392b); }
     .btn-sick { background: linear-gradient(135deg, #1abc9c, #16a085); }
     .btn-shift { background: linear-gradient(135deg, #3498db, #2980b9); }
-    .btn-vacation { background: linear-gradient(135deg, #f1c40f, #f39c12); }
-
+    .btn-festival { background: linear-gradient(135deg, #f1c40f, #f39c12); }
 
 
     .btn-month-summary {
@@ -385,7 +438,8 @@
       margin-bottom: 20px;
     }
 
-    .btn-month-summary:hover {
+
+  .btn-month-summary:hover {
       transform: translateY(-3px);
       box-shadow: var(--shadow-active);
     }
@@ -405,6 +459,7 @@
       transform: translate(-50%, -50%);
       z-index: 200;
       display: none;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .day-details.active {
@@ -424,6 +479,9 @@
       margin-bottom: 15px;
       padding-bottom: 10px;
       border-bottom: 1px solid #eee;
+    }
+    body.dark-theme .day-details-header {
+        border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .day-details-title {
@@ -445,13 +503,21 @@
       resize: vertical;
       font-family: inherit;
       font-size: 1rem;
-      transition: border 0.3s ease;
+      transition: border 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+      background-color: var(--color-bg); /* Use background variable */
+      color: var(--color-text-dark); /* Use text color variable */
+    }
+    body.dark-theme .day-note {
+        border-color: #666;
     }
 
     .day-note:focus {
       border-color: var(--color-primary);
       outline: none;
       box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+    body.dark-theme .day-note:focus {
+        box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
     }
 
     .btn-save-note {
@@ -509,15 +575,17 @@
     }
 
     .overtime-modal {
-      background: white;
+      background: var(--color-card);
       padding: 25px;
       border-radius: 20px;
       width: 90%;
       max-width: 340px;
       box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transition: background 0.3s ease;
     }
 
-    .modal-header {
+
+  .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -544,10 +612,17 @@
       color: #666;
       transition: all 0.2s ease;
     }
+    body.dark-theme .close-modal {
+        background: #6c757d;
+        color: #eee;
+    }
 
     .close-modal:hover {
       background: #eaeaea;
       transform: rotate(90deg);
+    }
+    body.dark-theme .close-modal:hover {
+        background: #5a6268;
     }
 
     .overtime-input {
@@ -558,13 +633,21 @@
       margin-bottom: 20px;
       font-size: 1.1rem;
       text-align: center;
-      transition: border 0.3s ease;
+      transition: border 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+      background-color: var(--color-bg);
+      color: var(--color-text-dark);
+    }
+    body.dark-theme .overtime-input {
+        border-color: #666;
     }
 
     .overtime-input:focus {
       border-color: var(--color-primary);
       outline: none;
       box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+    body.dark-theme .overtime-input:focus {
+        box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
     }
 
     .modal-actions {
@@ -588,9 +671,16 @@
       background: #f0f0f0;
       color: #666;
     }
+    body.dark-theme .btn-cancel {
+        background: #6c757d;
+        color: #eee;
+    }
 
     .btn-cancel:hover {
       background: #e0e0e0;
+    }
+    body.dark-theme .btn-cancel:hover {
+        background: #5a6268;
     }
 
     .btn-save {
@@ -659,7 +749,7 @@
       height: 100%;
       background-color: var(--color-secondary);
       box-shadow: -4px 0 15px rgba(0,0,0,0.2);
-      transition: right 0.3s ease-in-out;
+      transition: right 0.3s ease-in-out, background-color 0.3s ease;
       z-index: 250;
       padding-top: var(--header-height);
       color: white;
@@ -669,7 +759,7 @@
       right: 0;
     }
 
-    .side-menu ul {
+  .side-menu ul {
       list-style: none;
       padding: 0;
       margin: 0;
@@ -717,9 +807,10 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, #e0eafc, #cfdef3);
+      background: var(--gradient-bg);
       z-index: 90;
       overflow-y: auto;
+      transition: background 0.3s ease;
     }
 
     .screen-common.active {
@@ -732,6 +823,9 @@
       margin-bottom: 20px;
       padding-bottom: 10px;
       border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    body.dark-theme .screen-header {
+        border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .screen-header h2 {
@@ -768,6 +862,7 @@
       padding: 20px;
       border-radius: var(--border-radius);
       box-shadow: var(--shadow-default);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .holiday-item {
@@ -776,6 +871,9 @@
       align-items: center;
       padding: 12px 0;
       border-bottom: 1px solid #f0f0f0;
+    }
+    body.dark-theme .holiday-item {
+        border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
     .holiday-item:last-child {
@@ -795,10 +893,9 @@
       font-size: 0.9rem;
       text-align: right;
     }
-
-
-
-
+    body.dark-theme .holiday-date {
+        color: #bbb;
+    }
 
 /* Birthday Reminder Screen Styles */
     .birthday-form-card {
@@ -807,6 +904,7 @@
       border-radius: var(--border-radius);
       box-shadow: var(--shadow-default);
       margin-bottom: 20px;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .birthday-form-card input,
@@ -819,7 +917,14 @@
       font-size: 1rem;
       font-family: inherit;
       color: var(--color-text-dark);
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+      background-color: var(--color-bg); /* Use background variable */
+    }
+    body.dark-theme .birthday-form-card input,
+    body.dark-theme .birthday-form-card select {
+        border-color: #666;
+        background-color: #555;
+        color: var(--color-text-dark);
     }
 
     .birthday-form-card input:focus,
@@ -827,6 +932,10 @@
       border-color: var(--color-primary);
       outline: none;
       box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+    body.dark-theme .birthday-form-card input:focus,
+    body.dark-theme .birthday-form-card select:focus {
+        box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
     }
 
     .birthday-form-card button {
@@ -852,6 +961,7 @@
       padding: 20px;
       border-radius: var(--border-radius);
       box-shadow: var(--shadow-default);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .birthday-list-item {
@@ -864,6 +974,10 @@
       font-size: 0.95rem;
       position: relative;
       overflow: hidden;
+      transition: background 0.3s ease;
+    }
+    body.dark-theme .birthday-list-item {
+        background: #6c757d; /* A complementary dark color for list items */
     }
 
     .birthday-list-item:last-child {
@@ -876,8 +990,11 @@
       margin-bottom: 5px;
     }
 
-    .birthday-list-item span {
+.birthday-list-item span {
       color: #555;
+    }
+    body.dark-theme .birthday-list-item span {
+        color: #eee;
     }
 
     .birthday-list-item i {
@@ -918,6 +1035,7 @@
       border-radius: var(--border-radius);
       box-shadow: var(--shadow-default);
       overflow: hidden;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .settings-item {
@@ -928,6 +1046,9 @@
       cursor: pointer;
       transition: background-color 0.2s ease;
     }
+    body.dark-theme .settings-item {
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
 
     .settings-item:last-child {
       border-bottom: none;
@@ -935,6 +1056,9 @@
 
     .settings-item:hover {
       background-color: #f9f9f9;
+    }
+    body.dark-theme .settings-item:hover {
+        background-color: #555d65;
     }
 
     .settings-item i {
@@ -956,6 +1080,9 @@
       color: #999;
       font-size: 1.2rem;
     }
+    body.dark-theme .settings-item-action {
+        color: #bbb;
+    }
 
     /* Toggle Switch */
     .toggle-switch {
@@ -965,11 +1092,6 @@
       height: 28px;
     }
 
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
 
     .slider {
       position: absolute;
@@ -983,6 +1105,9 @@
       transition: .4s;
       border-radius: 28px;
     }
+    body.dark-theme .slider {
+        background-color: #777;
+    }
 
     .slider:before {
       position: absolute;
@@ -995,6 +1120,9 @@
       -webkit-transition: .4s;
       transition: .4s;
       border-radius: 50%;
+    }
+    body.dark-theme .slider:before {
+        background-color: #eee;
     }
 
     input:checked + .slider {
@@ -1020,6 +1148,7 @@
       padding-left: 5px;
     }
 
+
     /* My Profile Screen Styles */
     .profile-screen {
       display: none; /* Hidden by default */
@@ -1037,6 +1166,7 @@
       max-width: 400px;
       text-align: center;
       margin-bottom: 20px; /* Space from bottom actions */
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .profile-icon-container {
@@ -1076,13 +1206,22 @@
       font-size: 1rem;
       font-family: inherit;
       color: var(--color-text-dark);
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+      background-color: var(--color-bg);
+    }
+    body.dark-theme .profile-input-group input {
+        border-color: #666;
+        background-color: #555;
+        color: var(--color-text-dark);
     }
 
     .profile-input-group input:focus {
       border-color: var(--color-primary);
       outline: none;
       box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+    body.dark-theme .profile-input-group input:focus {
+        box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
     }
 
     .social-media-section {
@@ -1160,9 +1299,16 @@
       background: #e0e0e0;
       color: #555;
     }
+    body.dark-theme .btn-profile-action.close {
+        background: #6c757d;
+        color: #eee;
+    }
 
     .btn-profile-action.close:hover {
       background: #d0d0d0;
+    }
+    body.dark-theme .btn-profile-action.close:hover {
+        background: #5a6268;
     }
 
     /* Calendar Activities Screen Styles */
@@ -1176,6 +1322,7 @@
       border-radius: var(--border-radius);
       box-shadow: var(--shadow-default);
       margin-bottom: 20px;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .calendar-form-card h3 {
@@ -1193,13 +1340,22 @@
       font-size: 1rem;
       font-family: inherit;
       color: var(--color-text-dark);
-      transition: border-color 0.2s ease;
+      transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
+      background-color: var(--color-bg);
+    }
+    body.dark-theme .calendar-form-card input {
+        border-color: #666;
+        background-color: #555;
+        color: var(--color-text-dark);
     }
 
     .calendar-form-card input:focus {
       border-color: var(--color-primary);
       outline: none;
       box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    }
+    body.dark-theme .calendar-form-card input:focus {
+        box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
     }
 
 .calendar-form-card button {
@@ -1225,6 +1381,7 @@
       padding: 20px;
       border-radius: var(--border-radius);
       box-shadow: var(--shadow-default);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .calendars-list-container h3 {
@@ -1238,6 +1395,9 @@
       align-items: center;
       padding: 12px 0;
       border-bottom: 1px solid #f0f0f0;
+    }
+    body.dark-theme .calendar-list-item {
+        border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
     .calendar-list-item:last-child {
@@ -1292,9 +1452,16 @@
       color: var(--color-secondary);
       font-weight: 700;
     }
+    body.dark-theme .calendar-list-item.active-calendar .calendar-name {
+        color: var(--color-primary); /* Use a suitable primary for active in dark theme */
+    }
     .calendar-list-item.active-calendar .calendar-name i {
         color: var(--color-secondary);
     }
+    body.dark-theme .calendar-list-item.active-calendar .calendar-name i {
+        color: var(--color-primary);
+    }
+
     .calendar-list-item.active-calendar .btn-switch {
         pointer-events: none; /* Disable switch button for active calendar */
         opacity: 0.3;
@@ -1304,7 +1471,8 @@
         opacity: 0.3;
     }
 
-    /* Shift Options Specific Styles */
+
+/* Shift Options Specific Styles */
     .shift-options {
       display: grid;
       grid-template-columns: repeat(2, 1fr); /* Two columns */
@@ -1333,18 +1501,122 @@
         flex: 1; /* Allow buttons to grow */
         max-width: 150px; /* Max width for consistency */
     }
+
+    /* About Screen Specific Styles */
+    .about-screen {
+      display: none;
+    }
+
+    .about-content {
+      background: var(--color-card);
+      padding: 20px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-default);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .about-content h3 {
+      font-size: 1.3rem;
+      color: var(--color-primary);
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+    body.dark-theme .about-content h3 {
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .about-feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .about-feature-list li {
+      margin-bottom: 10px;
+      font-size: 1rem;
+      line-height: 1.4;
+      color: var(--color-text-dark);
+    }
+
+    .about-feature-list li i {
+      color: var(--color-secondary);
+      margin-right: 10px;
+      width: 20px; /* Align icons */
+      text-align: center;
+    }
+
+    .about-version {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      color: #777;
+    }
+    body.dark-theme .about-version {
+        color: #bbb;
+    }
+
+    /* Theme Selector Modal Styles */
+    .theme-modal {
+      background: var(--color-card);
+      padding: 25px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 340px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .theme-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-theme-option {
+      padding: 12px 20px;
+      border: 1px solid var(--color-primary);
+      border-radius: 12px;
+      background-color: var(--color-bg);
+      color: var(--color-text-dark);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    body.dark-theme .btn-theme-option {
+        border-color: var(--color-primary);
+        background-color: #555;
+        color: var(--color-text-dark);
+    }
+
+
+    .btn-theme-option:hover {
+      background-color: var(--color-primary);
+      color: white;
+    }
+
+    .btn-theme-option.active-theme {
+      background-color: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
   </style>
 </head>
-<body>
-  <nav class="side-menu" id="sideMenu">
-    <ul>
+<body class="light-theme"> <nav class="side-menu" id="sideMenu">
+   <ul>
       <li><a href="#" id="myProfileBtn"><i class="fas fa-user"></i> My Profile</a></li>
       <li><a href="#" id="calendarActivitiesBtn"><i class="fas fa-plus-circle"></i> Calendar Activities</a></li>
       <li><a href="#" id="holidaysFestivalsBtn"><i class="fas fa-umbrella-beach"></i> Holidays / Festivals</a></li>
       <li><a href="#" id="birthdayReminderBtn"><i class="fas fa-birthday-cake"></i> Birthday Reminder</a></li>
       <li><a href="#" id="settingsBtn"><i class="fas fa-cog"></i> Settings</a></li>
-      <li><a href="feedback.html"><i class="fas fa-comment-dots"></i> Send Feedback</a></li>
-    </ul>
+
+
+<li><a href="mailto:riteshksingh888@gmail.com?subject=Feedback%20for%20Attendance%20App&body=Hello,%0D%0A%0D%0AI have some feedback regarding the Attendance Calendar App."><i class="fas fa-comment-dots"></i> Send Feedback</a><li>
+</a>
+
+
+</ul>
   </nav>
   <div class="overlay-menu" id="overlayMenu"></div>
 
@@ -1433,14 +1705,16 @@
         <span>Shift</span>
       </button>
 
-      <button class="btn-action btn-vacation" data-status="vacation">
-        <i class="fas fa-suitcase-rolling"></i>
-        <span>Vacation</span>
-      </button>
+
+      <button class="btn-action btn-festival" data-status="festival">
+        <i class="fas fa-gift"></i>
+        <span>Festival</span>
+
     </div>
   </main>
 
-  <div class="day-details" id="dayDetails">
+
+ <div class="day-details" id="dayDetails">
     <div class="day-details-header">
       <h3 class="day-details-title" id="dayDetailsTitle">Day Details</h3>
       <button class="close-modal" id="closeDayDetailsBtn">
@@ -1562,13 +1836,15 @@
         </div>
     </div>
 
-    <div class="settings-section-title">Others</div>
+    <div
+
+ class="settings-section-title">Others</div>
     <div class="settings-list">
-        <a href="feedback.html" class="settings-item">
-            <i class="fas fa-comment-dots"></i>
-            <span class="settings-item-text">Feedback</span>
-            <i class="fas fa-chevron-right settings-item-action"></i>
-        </a>
+       <a href="#" id="rateAppBtn" class="settings-item">
+  <i class="fas fa-star"></i>
+  <span class="settings-item-text">Rate App</span>
+</a>
+
         <div class="settings-item" id="privacyPolicyBtn">
             <i class="fas fa-shield-alt"></i>
             <span class="settings-item-text">Privacy Policy</span>
@@ -1582,6 +1858,30 @@
     </div>
   </section>
 
+  <section class="about-screen screen-common" id="aboutScreen">
+    <div class="about-header screen-header">
+      <button class="btn-back" id="backToSettingsFromAboutBtn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2><i class="fas fa-info-circle birthday-icon"></i> About Attendance Calendar</h2>
+    </div>
+    <div class="about-content">
+      <h3>Key Features</h3>
+      <ul class="about-feature-list">
+        <li><i class="fas fa-calendar-alt"></i> **Attendance Tracking:** Mark days as Present, Absent, Holiday, Half Day, Leave, Emergency, Sick, or Festival.</li>
+        <li><i class="fas fa-sticky-note"></i> **Daily Notes:** Add custom notes for any specific day on the calendar.</li>
+        <li><i class="fas fa-clock"></i> **Overtime Management:** Record overtime hours for individual days.</li>
+        <li><i class="fas fa-random"></i> **Shift Scheduling:** Assign various shift types (Morning, Afternoon, Evening, Night, General, etc.) to days.</li>
+        <li><i class="fas fa-chart-pie"></i> **Monthly Summary:** Get a detailed statistical summary of your attendance for the current month.</li>
+        <li><i class="fas fa-layer-group"></i> **Multiple Calendars:** Create and manage separate attendance calendars for different purposes (e.g., personal, work).</li>
+        <li><i class="fas fa-birthday-cake"></i> **Birthday Reminders:** Store and manage birthdays of friends, family, and colleagues.</li>
+        <li><i class="fas fa-user-circle"></i> **Personal Profile:** Customize your profile with your name and email.</li>
+        <li><i class="fas fa-cloud-download-alt"></i> **Local Data Storage:** All your data is securely saved on your device for persistence.</li>
+      </ul>
+      <p class="about-version">Attendance Calendar App v1.0</p>
+      <p class="about-version">Developed by [Your Name/Company]</p>
+    </div>
+  </section>
   <section class="profile-screen screen-common" id="profileScreen">
     <div class="profile-header screen-header">
       <button class="btn-back" id="backToCalendarFromProfileBtn">
@@ -1624,7 +1924,9 @@
     </div>
   </section>
 
-  <section class="calendar-activities-screen screen-common" id="calendarActivitiesScreen">
+
+
+ <section class="calendar-activities-screen screen-common" id="calendarActivitiesScreen">
     <div class="calendar-header screen-header">
       <button class="btn-back" id="backToCalendarFromCalendarActivitiesBtn">
         <i class="fas fa-arrow-left"></i>
@@ -1643,7 +1945,24 @@
     </div>
   </section>
 
-
+  <div class="modal-overlay" id="themeModal">
+    <div class="theme-modal">
+      <div class="modal-header">
+        <h3 class="modal-title">Select App Theme</h3>
+        <button class="close-modal" id="closeThemeModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="theme-options">
+        <button class="btn-modal btn-theme-option" data-theme="light" id="lightThemeBtn">
+          <i class="fas fa-sun"></i> Light Theme
+        </button>
+        <button class="btn-modal btn-theme-option" data-theme="dark" id="darkThemeBtn">
+          <i class="fas fa-moon"></i> Dark Theme
+        </button>
+      </div>
+    </div>
+  </div>
 
 
 <script>
@@ -1716,6 +2035,10 @@
         this.privacyPolicyBtn = document.getElementById('privacyPolicyBtn');
         this.aboutBtn = document.getElementById('aboutBtn');
 
+        // NEW: About Screen elements
+        this.aboutScreen = document.getElementById('aboutScreen');
+        this.backToSettingsFromAboutBtn = document.getElementById('backToSettingsFromAboutBtn');
+
         // My Profile Screen elements
         this.myProfileBtn = document.getElementById('myProfileBtn');
         this.profileScreen = document.getElementById('profileScreen');
@@ -1738,12 +2061,18 @@
         // Top bar title element
         this.topBarTitle = document.querySelector('.top-bar .title');
 
+        // Theme Modal Elements
+        this.themeModal = document.getElementById('themeModal');
+        this.closeThemeModal = document.getElementById('closeThemeModal');
+        this.lightThemeBtn = document.getElementById('lightThemeBtn');
+        this.darkThemeBtn = document.getElementById('darkThemeBtn');
+
 
         // Load data from localStorage or set initial values
         this.calendars = JSON.parse(localStorage.getItem("calendars")) || { "Default": {} };
         this.activeCalendar = localStorage.getItem("activeCalendar") || "Default";
         this.birthdays = JSON.parse(localStorage.getItem("birthdays")) || [];
-        this.settings = JSON.parse(localStorage.getItem("settings")) || { dailyReminder: false };
+        this.settings = JSON.parse(localStorage.getItem("settings")) || { dailyReminder: false, theme: 'light' }; // Add theme setting
         this.userProfile = JSON.parse(localStorage.getItem("userProfile")) || { name: "", email: "" };
 
         // Initialize the calendar and event listeners
@@ -1751,6 +2080,9 @@
       }
 
       init() {
+        // Apply saved theme first
+        this.applyTheme(this.settings.theme);
+
         // Render the calendar
         this.setupCalendar();
         this.renderHolidays(); // Render holidays on initialization
@@ -1790,6 +2122,7 @@
           this.hideDayDetails();
           this.hideOvertimeModal();
           this.hideShiftModal(); // Close shift modal if overlay is clicked
+          this.hideThemeModal(); // Close theme modal if overlay is clicked
           this.toggleMenu(); // Close side menu if overlay is clicked
         });
 
@@ -1848,8 +2181,9 @@
         if (this.dailyReminderToggle) {
           this.dailyReminderToggle.addEventListener('change', () => this.toggleDailyReminder());
         }
+        // NEW: App Theme button listener
         if (this.appThemeBtn) {
-          this.appThemeBtn.addEventListener('click', () => alert("App Theme functionality coming soon!"));
+          this.appThemeBtn.addEventListener('click', () => this.showThemeModal());
         }
         if (this.shareAppBtn) {
 
@@ -1867,11 +2201,24 @@ this.shareAppBtn.addEventListener('click', () => {
             }
           });
         }
-        if (this.privacyPolicyBtn) {
+
+
+
+
+  if (this.privacyPolicyBtn) {
           this.privacyPolicyBtn.addEventListener('click', () => alert("Privacy Policy will be displayed here."));
         }
+
+        // NEW: About button listener
         if (this.aboutBtn) {
-          this.aboutBtn.addEventListener('click', () => alert("Attendance Calendar v1.0. Developed by [Your Name/Company]."));
+          this.aboutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            this.showScreen(this.aboutScreen); // Show the new About screen
+          });
+        }
+        // NEW: Back button for About screen
+        if (this.backToSettingsFromAboutBtn) {
+            this.backToSettingsFromAboutBtn.addEventListener('click', () => this.hideScreen(this.aboutScreen) || this.showScreen(this.settingsScreen)); // Go back to settings
         }
 
         // Event Listeners for My Profile Screen
@@ -1911,16 +2258,29 @@ this.shareAppBtn.addEventListener('click', () => {
         if (this.addCalendarBtn) {
             this.addCalendarBtn.addEventListener('click', () => this.addCalendar());
         }
+
+        // Theme Modal Listeners
+        if (this.closeThemeModal) {
+            this.closeThemeModal.addEventListener('click', () => this.hideThemeModal());
+        }
+        if (this.lightThemeBtn) {
+            this.lightThemeBtn.addEventListener('click', () => this.setTheme('light'));
+        }
+        if (this.darkThemeBtn) {
+            this.darkThemeBtn.addEventListener('click', () => this.setTheme('dark'));
+        }
       }
 
       setupCalendar() {
         if (!this.calendars[this.activeCalendar]) {
-          this.activeCalendar = "Default";
+          this.calendars[this.activeCalendar] = {};
+          this.activeCalendar = "Default"; // Fallback to Default if active calendar is deleted/missing
           this.saveData();
         }
         this.renderCalendar();
         this.updateTopBarTitle();
       }
+
 
       renderCalendar() {
         this.calendarGrid.innerHTML = '';
@@ -1988,7 +2348,8 @@ this.shareAppBtn.addEventListener('click', () => {
           }
 
           // Apply selected class if day is selected
-          if (this.selectedDays.includes(day)) {
+
+if (this.selectedDays.includes(day)) {
             dayCell.classList.add('selected');
           }
 
@@ -2003,7 +2364,8 @@ this.shareAppBtn.addEventListener('click', () => {
         // Prevent selection if any modal is active
         if (this.dayDetails.classList.contains('active') ||
             this.overtimeModal.classList.contains('active') ||
-            this.shiftModal.classList.contains('active')) {
+            this.shiftModal.classList.contains('active') ||
+            this.themeModal.classList.contains('active')) { // Prevent if theme modal is open
             return;
         }
 
@@ -2192,6 +2554,7 @@ this.shareAppBtn.addEventListener('click', () => {
             });
         });
 
+
         this.hideOvertimeModal();
       }
 
@@ -2223,7 +2586,7 @@ this.shareAppBtn.addEventListener('click', () => {
               return;
           }
 
-          this.selectedDays.forEach(day => {
+this.selectedDays.forEach(day => {
               const currentData = this.getDayData(day) || {};
               this.setDayData(day, {
                   ...currentData,
@@ -2327,7 +2690,7 @@ this.shareAppBtn.addEventListener('click', () => {
       showMonthSummary() {
         const monthYearKey = `${this.currentDate.getMonth()}-${this.currentDate.getFullYear()}`;
         const data = this.calendars[this.activeCalendar]?.[monthYearKey] || {};
-        let present = 0, absent = 0, holiday = 0, halfDay = 0, leave = 0, emergency = 0, sick = 0, shiftCount = 0, vacation = 0, overtime = 0;
+        let present = 0, absent = 0, holiday = 0, halfDay = 0, leave = 0, emergency = 0, sick = 0, shiftCount = 0, festival = 0, overtime = 0;
 
         Object.values(data).forEach(entry => {
           if (entry.status === 'present') present++;
@@ -2338,15 +2701,15 @@ this.shareAppBtn.addEventListener('click', () => {
           if (entry.status === 'emergency') emergency++; // Add new status
           if (entry.status === 'sick') sick++;           // Add new status
           if (entry.shift) shiftCount++;         // Count days with a shift
-          if (entry.status === 'vacation') vacation++;   // Add new status
+          if (entry.status === 'festival') festival++;   // Add new status
           if (entry.overtime) overtime += parseFloat(entry.overtime);
         });
 
         const daysInMonth = new Date(this.currentDate.getFullYear(), this.currentDate.getMonth() + 1, 0).getDate();
-        const totalRecordedDays = present + absent + holiday + halfDay + leave + emergency + sick + vacation; // Shift is not a status that counts towards attendance directly
+        const totalRecordedDays = present + absent + holiday + halfDay + leave + emergency + sick + festival; // Shift is not a status that counts towards attendance directly
         const attendanceRate = totalRecordedDays > 0 ? Math.round((present / totalRecordedDays) * 100) : 0;
 
-        alert(`📊 ${this.getFormattedMonthYear()} के लिए महीने का सारांश:\n\n✅ उपस्थित: ${present} दिन\n🌓 आधा दिन: ${halfDay} दिन\n❌ अनुपस्थित: ${absent} दिन\n✈️ छुट्टी: ${leave} दिन\n🚨 आपातकालीन: ${emergency} दिन\n🤒 बीमार: ${sick} दिन\n🔄 शिफ्ट चिह्नित दिन: ${shiftCount} दिन\n🏖️ अवकाश: ${vacation} दिन\n🎉 अवकाश: ${holiday} दिन\n⏱ ओवरटाइम: ${overtime.toFixed(1)} घंटे\n\n📈 उपस्थिति दर (चिह्नित उपस्थित/अनुपस्थित दिनों के आधार पर): ${attendanceRate}%`);
+        alert(`📊 ${this.getFormattedMonthYear()} monthly summary:\n\n✅ उपस्थित: ${present} दिन\n🌓 आधा दिन: ${halfDay} दिन\n❌ अनुपस्थित: ${absent} दिन\n✈️ छुट्टी: ${leave} दिन\n🚨 आपातकालीन: ${emergency} दिन\n🤒 बीमार: ${sick} दिन\n🔄 शिफ्ट गणना: ${shiftCount} दिन\n🥮 त्योहार: ${festival} दिन\n🎉 अवकाश: ${holiday} दिन\n⏱ ओवरटाइम: ${overtime.toFixed(1)} घंटे\n\n📈 उपस्थिति दर (चिह्नित उपस्थित/अनुपस्थित दिनों के आधार पर): ${attendanceRate}%`);
       }
 
       // Toggles the side menu visibility
@@ -2367,6 +2730,8 @@ this.shareAppBtn.addEventListener('click', () => {
         this.settingsScreen.classList.remove('active');
         this.profileScreen.classList.remove('active');
         this.calendarActivitiesScreen.classList.remove('active');
+        this.aboutScreen.classList.remove('active'); // Ensure About screen is hidden
+        this.themeModal.classList.remove('active'); // Ensure theme modal is hidden
 
         // Then show the requested screen
         screenElement.classList.add('active');
@@ -2374,16 +2739,25 @@ this.shareAppBtn.addEventListener('click', () => {
         // Ensure any modals are hidden
         this.hideDayDetails();
         this.hideOvertimeModal();
-        this.hideShiftModal(); // Ensure shift modal is hidden when switching screens
+        this.hideShiftModal();
         document.body.style.overflow = 'hidden'; // Prevent body scroll when a screen is active
       }
 
       // Helper function to hide a specific screen and show main calendar
       hideScreen(screenElement) {
         screenElement.classList.remove('active');
-        this.appContainer.style.display = 'flex'; // Show calendar and action buttons
-        document.body.style.overflow = ''; // Restore body scroll
+        // Determine if we should go back to the main calendar or settings screen
+        if (screenElement === this.aboutScreen) {
+          // If hiding about screen, go back to settings
+          this.showScreen(this.settingsScreen);
+        } else {
+          // Otherwise, go back to the main app container (calendar)
+          this.appContainer.style.display = 'flex'; // Show calendar and action buttons
+          document.body.style.overflow = ''; // Restore body scroll
+        }
       }
+
+
 
 
 // Holiday Screen Functions
@@ -2494,9 +2868,9 @@ this.shareAppBtn.addEventListener('click', () => {
 
           bdayItem.innerHTML = `
             <strong>${bday.name}</strong>
-            <span><i class="fas fa-gift"></i> Birthday: ${formattedDate}</span>
-            <span><i class="fas fa-user-friends"></i> Relation: ${bday.relation}</span>
-            <button class="delete-birthday-btn" aria-label="Delete birthday">
+            <span><i class="fas fa-gift"></i> जन्मदिन: ${formattedDate}</span>
+            <span><i class="fas fa-user-friends"></i> संबंध: ${bday.relation}</span>
+            <button class="delete-birthday-btn" aria-label="जन्मदिन हटाएँ">
                 <i class="fas fa-trash-alt"></i>
             </button>
           `;
@@ -2520,12 +2894,43 @@ this.shareAppBtn.addEventListener('click', () => {
       // Settings Functions
       loadSettings() {
         this.dailyReminderToggle.checked = this.settings.dailyReminder;
+        // Update theme buttons' active state
+        this.lightThemeBtn.classList.toggle('active-theme', this.settings.theme === 'light');
+        this.darkThemeBtn.classList.toggle('active-theme', this.settings.theme === 'dark');
       }
 
       toggleDailyReminder() {
         this.settings.dailyReminder = this.dailyReminderToggle.checked;
         this.saveData();
         alert(`दैनिक अनुस्मारक: ${this.settings.dailyReminder ? 'चालू' : 'बंद'}`); // Daily Reminder: On/Off
+      }
+
+      // Theme Functions
+      showThemeModal() {
+        this.themeModal.classList.add('active');
+        this.overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        this.loadSettings(); // Update theme buttons' active state
+      }
+
+      hideThemeModal() {
+        this.themeModal.classList.remove('active');
+        this.overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      applyTheme(theme) {
+        document.body.classList.remove('light-theme', 'dark-theme');
+        document.body.classList.add(`${theme}-theme`);
+        this.settings.theme = theme;
+        this.saveData();
+        this.loadSettings(); // Update buttons immediately
+      }
+
+      setTheme(theme) {
+        this.applyTheme(theme);
+        this.hideThemeModal();
+        alert(`थीम सफलतापूर्वक "${theme === 'light' ? 'लाइट' : 'डार्क'}" पर सेट की गई।`); // Theme successfully set to "Light/Dark".
       }
 
       // My Profile Functions
@@ -2552,11 +2957,13 @@ this.shareAppBtn.addEventListener('click', () => {
       updateTopBarTitle() {
         // This method is modified to only show "Attendance Calendar"
         if (this.topBarTitle) {
-            this.topBarTitle.textContent = `Attendance Calendar`;
+            this.topBarTitle.textContent = `उपस्थिति कैलेंडर`; // Attendance Calendar
         }
       }
 
-      renderCalendarList() {
+
+
+renderCalendarList() {
         this.calendarsList.innerHTML = '';
         this.activeCalendarNameSpan.textContent = this.activeCalendar;
 
@@ -2572,6 +2979,7 @@ this.shareAppBtn.addEventListener('click', () => {
             return;
         }
 
+
         calendarNames.forEach(name => {
             const listItem = document.createElement('div');
             listItem.className = 'calendar-list-item';
@@ -2584,13 +2992,13 @@ this.shareAppBtn.addEventListener('click', () => {
                     <i class="fas fa-calendar"></i> ${name}
                 </span>
                 <div class="calendar-actions">
-                    <button class="btn-switch" data-calendar-name="${name}" title="Switch to this calendar">
+                    <button class="btn-switch" data-calendar-name="${name}" title="इस कैलेंडर पर स्विच करें">
                         <i class="fas fa-toggle-on"></i>
                     </button>
-                    <button class="btn-edit" data-calendar-name="${name}" title="Edit calendar name">
+                    <button class="btn-edit" data-calendar-name="${name}" title="कैलेंडर का नाम संपादित करें">
                         <i class="fas fa-edit"></i>
                     </button>
-                    <button class="btn-delete" data-calendar-name="${name}" title="Delete this calendar">
+                    <button class="btn-delete" data-calendar-name="${name}" title="इस कैलेंडर को हटाएँ">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </div>
@@ -2759,48 +3167,3 @@ this.shareAppBtn.addEventListener('click', () => {
   </script>
 </body>
 </html>
-
-
-
-<!-- Monthly Summary Function Fix -->
-<script>
-  class AttendanceCalendar {
-    // ... (your existing methods and constructor)
-
-    showMonthSummary() {
-      const summary = {
-        present: 0,
-        absent: 0,
-        holiday: 0,
-        halfDay: 0,
-        leave: 0,
-        emergency: 0,
-        sick: 0,
-        shift: 0,
-        vacation: 0
-      };
-
-      const monthKey = `${this.currentDate.getMonth()}-${this.currentDate.getFullYear()}`;
-      const monthData = this.calendars[this.activeCalendar]?.[monthKey] || {};
-
-      for (const day in monthData) {
-        const status = monthData[day]?.status;
-        if (status && summary[status] !== undefined) {
-          summary[status]++;
-        }
-      }
-
-      alert(
-        `Monthly Summary:\n\n` +
-        `Present: ${summary.present}\n` +
-        `Absent: ${summary.absent}\n` +
-        `Holiday: ${summary.holiday}\n` +
-        `Half Day: ${summary.halfDay}\n` +
-        `Leave: ${summary.leave}\n` +
-        `Emergency: ${summary.emergency}\n` +
-        `Sick: ${summary.sick}\n` +
-        `Vacation: ${summary.vacation}`
-      );
-    }
-  }
-</script>
