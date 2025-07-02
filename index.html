@@ -1,384 +1,302 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Attendance Calendar</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Attendance Calendar</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
-<body class="light-theme">
-  <nav class="side-menu" id="sideMenu">
-    <ul>
-      <li><a href="#" id="myProfileBtn"><i class="fas fa-user"></i> My Profile</a></li>
-      <li><a href="#" id="calendarActivitiesBtn"><i class="fas fa-plus-circle"></i> Calendar Activities</a></li>
-      <li><a href="#" id="holidaysFestivalsBtn"><i class="fas fa-umbrella-beach"></i> Holidays / Festivals</a></li>
-      <li><a href="#" id="birthdayReminderBtn"><i class="fas fa-birthday-cake"></i> Birthday Reminder</a></li>
-      <li><a href="#" id="settingsBtn"><i class="fas fa-cog"></i> Settings</a></li>
-      <li><a href="mailto:riteshksingh888@gmail.com?subject=Feedback%20for%20Attendance%20App&body=Hello,%0D%0A%0D%0AI have some feedback regarding the Attendance Calendar App."><i class="fas fa-comment-dots"></i> Send Feedback</a></li>
-    </ul>
-  </nav>
-  <div class="overlay-menu" id="overlayMenu"></div>
-
-  <header class="top-bar">
-    <div class="logo">
-      <div class="logo-icon">
-        <i class="fas fa-calendar-alt"></i>
-      </div>
-      <h1 class="title">Attendance Calendar</h1>
+<body>
+    <div class="top-bar">
+        <div class="logo">
+            <span class="logo-icon"><i class="fas fa-calendar-check"></i></span>
+            <span class="title" id="topBarTitle">Attendance Calendar</span>
+        </div>
+        <i class="fas fa-bars menu-bar" id="menuToggle"></i>
     </div>
-    <div class="menu-bar" id="menuToggle">
-      <i class="fas fa-bars"></i>
-    </div>
-  </header>
 
-  <main class="app-container" id="appContainer">
-    <section class="calendar-container" id="calendarContainer">
-      <div class="calendar-header">
-        <button class="btn-nav-month" id="prevMonthBtn">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <h2 class="month-year-display" id="monthYearDisplay">May 2023</h2>
-        <button class="btn-nav-month" id="nextMonthBtn">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
+    <div class="app-container" id="appContainer">
+        <div class="calendar-container">
+            <div class="calendar-header">
+                <button class="btn-nav-month" id="prevMonthBtn"><i class="fas fa-chevron-left"></i></button>
+                <h3 class="month-year-display" id="monthYearDisplay"></h3>
+                <button class="btn-nav-month" id="nextMonthBtn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="weekdays">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid">
+                </div>
+        </div>
 
-      <div class="weekdays">
-        <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span>
-        <span>Thu</span><span>Fri</span><span>Sat</span>
-      </div>
-
-      <div class="calendar-grid" id="calendarGrid">
-      </div>
-    </section>
-
-    <button class="btn-month-summary" id="monthSummaryBtn">
-      <i class="fas fa-chart-pie"></i> View Monthly Summary
-    </button>
-
-    <div class="action-button-wrapper">
-      <button class="btn-action btn-present" data-status="present">
-        <i class="fas fa-check"></i>
-        <span>Present</span>
-      </button>
-      <button class="btn-action btn-absent" data-status="absent">
-        <i class="fas fa-times"></i>
-        <span>Absent</span>
-      </button>
-      <button class="btn-action btn-holiday" data-status="holiday">
-        <i class="fas fa-umbrella-beach"></i>
-        <span>Holiday</span>
-      </button>
-      <button class="btn-action btn-half-day" data-status="half-day">
-        <i class="fas fa-hourglass-half"></i>
-        <span>Half Day</span>
-      </button>
-      <button class="btn-action btn-leave" data-status="leave">
-        <i class="fas fa-plane-departure"></i>
-        <span>Leave</span>
-      </button>
-      <button class="btn-action btn-clear" id="clearDayBtn">
-        <i class="fas fa-eraser"></i>
-        <span>Clear</span>
-      </button>
-      <button class="btn-action btn-note" id="noteBtn">
-        <i class="fas fa-sticky-note"></i>
-        <span>Note</span>
-      </button>
-      <button class="btn-action btn-overtime" id="overtimeBtn">
-        <i class="fas fa-clock"></i>
-        <span>Overtime</span>
-      </button>
-      <button class="btn-action btn-emergency" data-status="emergency">
+        <div class="action-button-wrapper">
+            <button class="btn-action btn-present button" data-status="present"><i class="fas fa-check"></i> Present</button>
+            <button class="btn-action btn-absent button" data-status="absent"><i class="fas fa-times"></i> Absent</button>
+            <button class="btn-action btn-holiday button" data-status="holiday"><i class="fas fa-umbrella-beach"></i> Holiday</button>
+            <button class="btn-action btn-clear button" id="clearDayBtn"><i class="fas fa-eraser"></i> Clear</button>
+            <button class="btn-action btn-note button" id="noteBtn"><i class="fas fa-pen"></i> Note</button>
+            <button class="btn-action btn-overtime button" id="overtimeBtn"><i class="fas fa-hourglass-half"></i> Overtime</button>
+            <button class="btn-action btn-half-day button" data-status="half-day"><i class="fas fa-adjust"></i> Half Day</button>
+            <button class="btn-action btn-leave button" data-status="leave"><i class="fas fa-plane"></i> Leave</button>
+           
+             <button class="btn-action btn-emergency" data-status="emergency">
         <span>Emergency</span>
       </button>
-      <button class="btn-action btn-sick" data-status="sick">
-        <i class="fas fa-thermometer-half"></i>
-        <span>Sick</span>
-      </button>
-      <button class="btn-action btn-shift" data-status="shift" id="shiftBtn">
-        <i class="fas fa-random"></i>
-        <span>Shift</span>
-      </button>
-      <button class="btn-action btn-festival" data-status="festival">
-        <i class="fas fa-gift"></i>
-        <span>Festival</span>
-      </button>
-    </div>
-  </main>
 
-  <div class="day-details" id="dayDetails">
-    <div class="day-details-header">
-      <h3 class="day-details-title" id="dayDetailsTitle">Day Details</h3>
-      <button class="close-modal" id="closeDayDetailsBtn">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="day-details-content">
-      <textarea id="dayNote" class="day-note" placeholder="Add a note for this day..."></textarea>
-      <button class="btn-save-note" id="saveDayNoteBtn">Save Note</button>
-    </div>
-  </div>
+            <button class="btn-action btn-sick button" data-status="sick"><i class="fas fa-medkit"></i> Sick</button>
+            <button class="btn-action btn-shift button" id="shiftBtn"><i class="fas fa-sync-alt"></i> Shift</button>
+            <button class="btn-action btn-festival button" data-status="festival"><i class="fas fa-fireworks"></i> Festival</button>
+        </div>
 
-  <div class="modal-overlay" id="overtimeModal">
-    <div class="overtime-modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Overtime Hours</h3>
-        <button class="close-modal" id="closeOvertimeModal">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <input type="number" id="overtimeInput" class="overtime-input" placeholder="Enter hours" min="0" step="0.5">
-      <div class="modal-actions">
-        <button class="btn-modal btn-cancel" id="cancelOvertime">Cancel</button>
-        <button class="btn-modal btn-save" id="saveOvertime">Save</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="shiftModal">
-    <div class="overtime-modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Select Shift Type</h3>
-        <button class="close-modal" id="closeShiftModal">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="shift-options">
-        <button class="btn-modal btn-shift-option" data-shift-type="M">Morning (M)</button>
-        <button class="btn-modal btn-shift-option" data-shift-type="A">Afternoon (A)</button>
-        <button class="btn-modal btn-shift-option" data-shift-type="E">Evening (E)</button>
-        <button class="btn-modal btn-shift-option" data-shift-type="N">Night (N)</button>
-        <button class="btn-modal btn-shift-option" data-shift-type="G">General (G)</button>
-        <button class="btn-modal btn-shift-option" data-shift-type="S1">Shift 1 (S1)</button>
-        <button class="btn-modal btn-shift-option" data-shift-type="S2">Shift 2 (S2)</button>
-      </div>
-      <div class="modal-actions" style="margin-top: 20px;">
-        <button class="btn-modal btn-cancel" id="cancelShift">Cancel</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal-overlay" id="monthlySummaryModalOverlay">
-    <div class="monthly-summary-modal">
-      <div class="modal-header">
-        <h3 class="modal-title">मासिक सारांश (Monthly Summary)</h3>
-        <button class="close-modal" id="closeMonthlySummaryModal">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="modal-content" id="monthlySummaryContent">
-        <p><i class="fas fa-check-circle"></i> उपस्थित: <span id="summaryPresent">0</span> दिन</p>
-        <p><i class="fas fa-hourglass-half"></i> आधा दिन: <span id="summaryHalfDay">0</span> दिन</p>
-        <p><i class="fas fa-times-circle"></i> अनुपस्थित: <span id="summaryAbsent">0</span> दिन</p>
-        <p><i class="fas fa-umbrella-beach"></i> छुट्टी: <span id="summaryHoliday">0</span> दिन</p>
-        <p><i class="fas fa-car-crash"></i> आपातकालीन: <span id="summaryEmergency">0</span> दिन</p>
-        <p><i class="fas fa-procedures"></i> बीमार: <span id="summarySick">0</span> दिन</p>
-        <p><i class="fas fa-clock"></i> शिफ्ट गणना: <span id="summaryShift">0</span> दिन</p>
-        <p><i class="fas fa-gift"></i> त्योहार: <span id="summaryFestival">0</span> दिन</p>
-        <p><i class="fas fa-plane-departure"></i> अवकाश: <span id="summaryLeave">0</span> दिन</p> <p><i class="fas fa-hourglass-end"></i> ओवरटाइम: <span id="summaryOvertime">0.0</span> घंटे</p>
-        <p class="summary-attendance-rate"><i class="fas fa-chart-line"></i> उपस्थिति दर: <span id="summaryAttendanceRate">0%</span></p>
-      </div>
-      <div class="modal-actions">
-        <button class="btn-modal btn-save" id="okMonthlySummaryModal">ठीक है</button>
-      </div>
-    </div>
-  </div>
-  <div class="overlay" id="overlay"></div>
-
-  <section class="holiday-screen screen-common" id="holidayScreen">
-    <div class="holiday-header screen-header">
-      <button class="btn-back" id="backToCalendarFromHolidaysBtn">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <h2>2025 Holidays & Festivals</h2>
-    </div>
-    <div class="holidays-list" id="holidaysList">
-    </div>
-  </section>
-
-  <section class="birthday-screen screen-common" id="birthdayScreen">
-    <div class="birthday-header screen-header">
-      <button class="btn-back" id="backToCalendarFromBirthdaysBtn">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <h2><i class="fas fa-birthday-cake birthday-icon"></i> Birthday Reminder</h2>
-    </div>
-    <div class="birthday-form-card">
-      <input type="text" id="birthdayNameInput" placeholder="Enter Name" autocomplete="off">
-      <input type="date" id="birthdayDateInput">
-      <select id="birthdayRelationSelect">
-        <option value="">Relation (optional)</option>
-        <option value="Family">Family</option>
-        <option value="Friend">Friend</option>
-        <option value="Colleague">Colleague</option>
-        <option value="Other">Other</option>
-      </select>
-      <button id="addBirthdayBtn">Add Birthday</button>
-    </div>
-    <div class="birthdays-list-container" id="birthdaysListContainer">
-    </div>
-  </section>
-
-  <section class="settings-screen screen-common" id="settingsScreen">
-    <div class="settings-header screen-header">
-      <button class="btn-back" id="backToCalendarFromSettingsBtn">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <h2><i class="fas fa-cog birthday-icon"></i> Settings</h2>
+        <button class="btn-month-summary button" id="monthSummaryBtn">View Monthly Summary</button>
     </div>
 
-    <div class="settings-section-title">Reminder</div>
-    <div class="settings-list">
-        <div class="settings-item">
-            <i class="fas fa-bell"></i>
-            <span class="settings-item-text">Daily Reminder</span>
-            <label class="toggle-switch">
-                <input type="checkbox" id="dailyReminderToggle">
-                <span class="slider"></span>
-            </label>
+    <div class="side-menu" id="sideMenu">
+        <ul>
+            <li><a href="#" id="myProfileBtn"><i class="fas fa-user-circle"></i> My Profile</a></li>
+            <li><a href="#" id="holidaysFestivalsBtn"><i class="fas fa-gifts"></i> Holidays & Festivals</a></li>
+            <li><a href="#" id="birthdayReminderBtn"><i class="fas fa-birthday-cake"></i> Birthday Reminder</a></li>
+            <li><a href="#" id="calendarActivitiesBtn"><i class="fas fa-calendar-alt"></i> Calendar Activities</a></li>
+            <li><a href="#" id="settingsBtn"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+    </div>
+    <div class="overlay-menu" id="overlayMenu"></div>
+
+    <div class="day-details" id="dayDetails">
+        <div class="day-details-header">
+            <h3 class="day-details-title" id="dayDetailsTitle"></h3>
+            <button class="close-modal" id="closeDayDetailsBtn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="day-details-content">
+            <textarea id="dayNote" placeholder="Write a note for this day..."></textarea>
+            <button class="btn-save-note button" id="saveDayNoteBtn">Save Note</button>
         </div>
     </div>
 
-    <div class="settings-section-title">General</div>
-    <div class="settings-list">
-        <div class="settings-item" id="appThemeBtn">
-            <i class="fas fa-lightbulb"></i>
-            <span class="settings-item-text">App Theme</span>
-            <i class="fas fa-chevron-right settings-item-action"></i>
-        </div>
-        <div class="settings-item" id="shareAppBtn">
-            <i class="fas fa-share-alt"></i>
-            <span class="settings-item-text">Share App</span>
-            <i class="fas fa-chevron-right settings-item-action"></i>
-        </div>
-    </div>
-
-    <div class="settings-section-title">Others</div>
-    <div class="settings-list">
-       <a href="#" id="rateAppBtn" class="settings-item">
-         <i class="fas fa-star"></i>
-         <span class="settings-item-text">Rate App</span>
-       </a>
-        <div class="settings-item" id="privacyPolicyBtn">
-            <i class="fas fa-shield-alt"></i>
-            <span class="settings-item-text">Privacy Policy</span>
-            <i class="fas fa-chevron-right settings-item-action"></i>
-        </div>
-        <div class="settings-item" id="aboutBtn">
-            <i class="fas fa-info-circle"></i>
-            <span class="settings-item-text">About</span>
-            <i class="fas fa-chevron-right settings-item-action"></i>
+    <div id="overtimeModal" class="modal-overlay">
+        <div class="overtime-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Enter Overtime Hours</h2>
+                <button class="close-modal" id="closeOvertimeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <input type="number" id="overtimeInput" placeholder="Enter hours (e.g., 2.5)">
+            <div class="modal-actions">
+                <button class="btn-modal btn-cancel" id="cancelOvertime">Cancel</button>
+                <button class="btn-modal btn-save button" id="saveOvertime">Save</button>
+            </div>
         </div>
     </div>
-  </section>
 
-  <section class="about-screen screen-common" id="aboutScreen">
-    <div class="about-header screen-header">
-      <button class="btn-back" id="backToSettingsFromAboutBtn">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <h2><i class="fas fa-info-circle birthday-icon"></i> About Attendance Calendar</h2>
+    <div id="shiftModal" class="modal-overlay">
+        <div class="overtime-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Select Shift Type</h2>
+                <button class="close-modal" id="closeShiftModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="shift-options">
+                <button class="btn-shift-option button" data-shift-type="M">Morning</button>
+                <button class="btn-shift-option button" data-shift-type="E">Evening</button>
+                <button class="btn-shift-option button" data-shift-type="N">Night</button>
+                <button class="btn-shift-option button" data-shift-type="G">General</button>
+                <button class="btn-shift-option button" data-shift-type="">None</button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-modal btn-cancel" id="cancelShift">Cancel</button>
+            </div>
+        </div>
     </div>
-    <div class="about-content">
-      <h3>Key Features</h3>
-      <ul class="about-feature-list">
-        <li><i class="fas fa-calendar-alt"></i> **Attendance Tracking:** Mark days as Present, Absent, Holiday, Half Day, Leave, Emergency, Sick, or Festival.</li>
-        <li><i class="fas fa-sticky-note"></i> **Daily Notes:** Add custom notes for any specific day on the calendar.</li>
-        <li><i class="fas fa-clock"></i> **Overtime Management:** Record overtime hours for individual days.</li>
-        <li><i class="fas fa-random"></i> **Shift Scheduling:** Assign various shift types (Morning, Afternoon, Evening, Night, General, etc.) to days.</li>
-        <li><i class="fas fa-chart-pie"></i> **Monthly Summary:** Get a detailed statistical summary of your attendance for the current month.</li>
-        <li><i class="fas fa-layer-group"></i> **Multiple Calendars:** Create and manage separate attendance calendars for different purposes (e.g., personal, work).</li>
-        <li><i class="fas fa-birthday-cake"></i> **Birthday Reminders:** Store and manage birthdays of friends, family, and colleagues.</li>
-        <li><i class="fas fa-user-circle"></i> **Personal Profile:** Customize your profile with your name and email.</li>
-        <li><i class="fas fa-cloud-download-alt"></i> **Local Data Storage:** All your data is securely saved on your device for persistence.</li>
-      </ul>
-      <p class="about-version">Attendance Calendar App v1.0</p>
-      <p class="about-version">Developed by [Your Name/Company]</p>
-    </div>
-  </section>
-  <section class="profile-screen screen-common" id="profileScreen">
-    <div class="profile-header screen-header">
-      <button class="btn-back" id="backToCalendarFromProfileBtn">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <h2>My Profile</h2>
-    </div>
-    <div class="profile-content">
-      <div class="profile-icon-container" id="profileIconContainer">
-        <span id="profileInitial">U</span>
-      </div>
-      <div class="profile-input-group">
-        <label for="profileNameInput">Name</label>
-        <input type="text" id="profileNameInput" placeholder="Enter your name" autocomplete="off">
-      </div>
-      <div class="profile-input-group">
-        <label for="profileEmailInput">Email</label>
-        <input type="email" id="profileEmailInput" placeholder="Enter your email" autocomplete="off">
-      </div>
 
-      <div class="social-media-section">
-        <p>Join us on social media:</p>
-        <div class="social-icons">
-          <a href="https://www.facebook.com/yourprofile" target="_blank" class="social-icon-btn facebook" aria-label="Facebook">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a href="https://www.instagram.com/yourprofile" target="_blank" class="social-icon-btn instagram" aria-label="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="https://www.youtube.com/yourchannel" target="_blank" class="social-icon-btn youtube" aria-label="YouTube">
-            <i class="fab fa-youtube"></i>
-          </a>
+    <div id="monthlySummaryModalOverlay" class="modal-overlay">
+      <div class="monthly-summary-modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Monthly Summary</h2>
+          <button class="close-modal" id="closeMonthSummaryModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-content" id="monthSummaryContent">
+          </div>
+        <div class="modal-actions">
+            <button class="btn-modal btn-cancel" id="closeMonthSummaryModalBottom">Close</button>
         </div>
       </div>
+    </div>
 
-      <div class="profile-actions">
-        <button class="btn-profile-action save" id="saveProfileBtn">Save</button>
-        <button class="btn-profile-action close" id="closeProfileBtn">Close</button>
+    <div id="themeModal" class="modal-overlay">
+      <div class="theme-modal">
+        <div class="modal-header">
+          <h2 class="modal-title">Select Theme</h2>
+          <button class="close-modal" id="closeThemeModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="theme-options">
+          <button class="btn-theme-option" id="lightThemeBtn">
+            <i class="fas fa-sun"></i> Light Theme
+          </button>
+          <button class="btn-theme-option" id="darkThemeBtn">
+            <i class="fas fa-moon"></i> Dark Theme
+          </button>
+        </div>
       </div>
     </div>
-  </section>
 
-  <section class="calendar-activities-screen screen-common" id="calendarActivitiesScreen">
-    <div class="calendar-header screen-header">
-      <button class="btn-back" id="backToCalendarFromCalendarActivitiesBtn">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <h2><i class="fas fa-calendar-check birthday-icon"></i> Calendar Activities</h2>
-    </div>
-    <div class="calendar-form-card">
-      <h3>Add New Calendar</h3>
-      <input type="text" id="newCalendarNameInput" placeholder="Enter new calendar name" autocomplete="off">
-      <button id="addCalendarBtn">Add Calendar</button>
-    </div>
-    <div class="calendars-list-container">
-      <h3>Your Calendars (<span id="activeCalendarNameSpan">Default</span> is active)</h3>
-      <div id="calendarsList">
-      </div>
-    </div>
-  </section>
+    <div class="overlay" id="overlay"></div>
 
-  <div class="modal-overlay" id="themeModal">
-    <div class="theme-modal">
-      <div class="modal-header">
-        <h3 class="modal-title">Select App Theme</h3>
-        <button class="close-modal" id="closeThemeModal">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="theme-options">
-        <button class="btn-modal btn-theme-option" data-theme="light" id="lightThemeBtn">
-          <i class="fas fa-sun"></i> Light Theme
-        </button>
-        <button class="btn-modal btn-theme-option" data-theme="dark" id="darkThemeBtn">
-          <i class="fas fa-moon"></i> Dark Theme
-        </button>
-      </div>
+    <div class="screen-common" id="holidayScreen">
+        <div class="screen-header">
+            <button class="btn-back" id="backToCalendarFromHolidaysBtn"><i class="fas fa-arrow-left"></i></button>
+            <h2>Holidays & Festivals</h2>
+        </div>
+        <div class="holidays-list" id="holidaysList">
+            </div>
     </div>
-  </div>
 
-  <script src="script.js"></script>
+    <div class="screen-common" id="birthdayScreen">
+        <div class="screen-header">
+            <button class="btn-back" id="backToCalendarFromBirthdaysBtn"><i class="fas fa-arrow-left"></i></button>
+            <h2>Birthday Reminders</h2>
+        </div>
+        <div class="birthday-form-card">
+            <input type="text" id="birthdayNameInput" placeholder="Name">
+            <input type="date" id="birthdayDateInput">
+            <select id="birthdayRelationSelect">
+                <option value="">Select Relation (Optional)</option>
+                <option value="Family">Family</option>
+                <option value="Friend">Friend</option>
+                <option value="Colleague">Colleague</option>
+                <option value="Other">Other</option>
+            </select>
+            <button class="button" id="addBirthdayBtn">Add Birthday</button>
+        </div>
+        <div class="birthdays-list-container" id="birthdaysListContainer">
+            </div>
+    </div>
+
+    <div class="screen-common" id="settingsScreen">
+        <div class="screen-header">
+            <button class="btn-back" id="backToCalendarFromSettingsBtn"><i class="fas fa-arrow-left"></i></button>
+            <h2>Settings</h2>
+        </div>
+        <div class="settings-list">
+            <div class="settings-item">
+                <i class="fas fa-bell"></i>
+                <span class="settings-item-text">Daily Reminders</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dailyReminderToggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="settings-item" id="appThemeBtn">
+                <i class="fas fa-paint-brush"></i>
+                <span class="settings-item-text">App Theme</span>
+                <i class="fas fa-chevron-right settings-item-action"></i>
+            </div>
+            <div class="settings-item" id="shareAppBtn">
+                <i class="fas fa-share-alt"></i>
+                <span class="settings-item-text">Share App</span>
+                <i class="fas fa-chevron-right settings-item-action"></i>
+            </div>
+            <div class="settings-item" id="privacyPolicyBtn">
+                <i class="fas fa-shield-alt"></i>
+                <span class="settings-item-text">Privacy Policy</span>
+                <i class="fas fa-chevron-right settings-item-action"></i>
+            </div>
+            <div class="settings-item" id="aboutBtn">
+                <i class="fas fa-info-circle"></i>
+                <span class="settings-item-text">About</span>
+                <i class="fas fa-chevron-right settings-item-action"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="screen-common" id="aboutScreen">
+        <div class="screen-header">
+            <button class="btn-back" id="backToSettingsFromAboutBtn"><i class="fas fa-arrow-left"></i></button>
+            <h2>About App</h2>
+        </div>
+        <div class="about-content">
+            <h3>Features</h3>
+            <ul class="about-feature-list">
+                <li><i class="fas fa-calendar-alt"></i> Track daily attendance (Present, Absent, Holiday, Half Day, Leave, Emergency, Sick, Festival)</li>
+                <li><i class="fas fa-hourglass-half"></i> Record overtime hours</li>
+                <li><i class="fas fa-pen-to-square"></i> Add notes for specific days</li>
+                <li><i class="fas fa-chart-bar"></i> View monthly attendance summary</li>
+                <li><i class="fas fa-moon"></i> Switch between Dark and Light themes</li>
+                <li><i class="fas fa-bell"></i> Set daily reminders</li>
+                <li><i class="fas fa-user-friends"></i> Add birthday reminders</li>
+                <li><i class="fas fa-calendar-plus"></i> Create and manage multiple calendars</li>
+                <li><i class="fas fa-share-alt"></i> Share the app with friends and family</li>
+            </ul>
+            <p class="about-version">Version: 1.0.0</p>
+        </div>
+    </div>
+
+
+    <div class="screen-common" id="profileScreen">
+        <div class="screen-header">
+            <button class="btn-back" id="backToCalendarFromProfileBtn"><i class="fas fa-arrow-left"></i></button>
+            <h2>My Profile</h2>
+        </div>
+        <div class="profile-content">
+            <div class="profile-icon-container" id="profileInitial">
+                U
+            </div>
+            <div class="profile-input-group">
+                <label for="profileNameInput">Name</label>
+                <input type="text" id="profileNameInput" placeholder="Your Name">
+            </div>
+            <div class="profile-input-group">
+                <label for="profileEmailInput">Email</label>
+                <input type="email" id="profileEmailInput" placeholder="Your Email">
+            </div>
+
+            <div class="social-media-section">
+                <p>Follow us on social media:</p>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/" target="_blank" class="social-icon-btn facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/" target="_blank" class="social-icon-btn instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/" target="_blank" class="social-icon-btn youtube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn-profile-action save button" id="saveProfileBtn">Save</button>
+                <button class="btn-profile-action close" id="closeProfileBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="screen-common" id="calendarActivitiesScreen">
+        <div class="screen-header">
+            <button class="btn-back" id="backToCalendarFromCalendarActivitiesBtn"><i class="fas fa-arrow-left"></i></button>
+            <h2>Calendar Activities</h2>
+        </div>
+        <div class="calendar-form-card">
+            <h3>Add New Calendar</h3>
+            <input type="text" id="newCalendarNameInput" placeholder="New Calendar Name">
+            <button class="button" id="addCalendarBtn">Add Calendar</button>
+        </div>
+        <div class="calendars-list-container">
+            <h3>Manage Calendars (<span id="activeCalendarNameSpan"></span> active)</h3>
+            <div id="calendarsList">
+                </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

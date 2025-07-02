@@ -99,6 +99,11 @@ class AttendanceCalendar {
     this.lightThemeBtn = document.getElementById('lightThemeBtn');
     this.darkThemeBtn = document.getElementById('darkThemeBtn');
 
+    // Monthly Summary Modal Elements - NEW
+    this.monthlySummaryModalOverlay = document.getElementById('monthlySummaryModalOverlay');
+    this.monthSummaryContent = document.getElementById('monthSummaryContent');
+    this.closeMonthSummaryModal = document.getElementById('closeMonthSummaryModal');
+    this.closeMonthSummaryModalBottom = document.getElementById('closeMonthSummaryModalBottom');
 
     // Load data from localStorage or set initial values
     this.calendars = JSON.parse(localStorage.getItem("calendars")) || { "Default": {} };
@@ -134,7 +139,7 @@ class AttendanceCalendar {
       });
     });
 
-this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
+    this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     this.nextMonthBtn.addEventListener('click', () => this.changeMonth(1));
 
     this.clearDayBtn.addEventListener('click', () => this.clearSelectedDays());
@@ -157,14 +162,26 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     this.overlay.addEventListener('click', () => {
       this.hideDayDetails();
       this.hideOvertimeModal();
-      this.hideShiftModal(); // Close shift modal if overlay is clicked
-      this.hideThemeModal(); // Close theme modal if overlay is clicked
+      this.hideShiftModal();
+      this.hideThemeModal();
+      this.hideMonthSummaryModal(); // NEW: Close month summary modal if overlay is clicked
       this.toggleMenu(); // Close side menu if overlay is clicked
     });
 
     this.overlayMenu.addEventListener('click', () => this.toggleMenu());
 
-    this.monthSummaryBtn.addEventListener('click', () => this.showMonthSummary());
+
+// Monthly Summary Modal Listeners - NEW
+    if (this.monthSummaryBtn) {
+        this.monthSummaryBtn.addEventListener('click', () => this.showMonthSummary());
+    }
+    if (this.closeMonthSummaryModal) {
+        this.closeMonthSummaryModal.addEventListener('click', () => this.hideMonthSummaryModal());
+    }
+    if (this.closeMonthSummaryModalBottom) {
+        this.closeMonthSummaryModalBottom.addEventListener('click', () => this.hideMonthSummaryModal());
+    }
+
 
     this.closeOvertimeModal.addEventListener('click', () => this.hideOvertimeModal());
     this.cancelOvertime.addEventListener('click', () => this.hideOvertimeModal());
@@ -247,6 +264,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
         this.showScreen(this.aboutScreen); // Show the new About screen
       });
     }
+
     // Back button for About screen
     if (this.backToSettingsFromAboutBtn) {
         this.backToSettingsFromAboutBtn.addEventListener('click', () => this.hideScreen(this.aboutScreen) || this.showScreen(this.settingsScreen)); // Go back to settings
@@ -302,6 +320,8 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     }
   }
 
+
+
   setupCalendar() {
     if (!this.calendars[this.activeCalendar]) {
       this.calendars[this.activeCalendar] = {};
@@ -342,7 +362,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
         dayCell.classList.add('sunday');
       }
 
-      // Mark current day
+  // Mark current day
       if (isCurrentMonth && day === today.getDate()) {
         dayCell.classList.add('current-day');
       }
@@ -394,7 +414,8 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     if (this.dayDetails.classList.contains('active') ||
         this.overtimeModal.classList.contains('active') ||
         this.shiftModal.classList.contains('active') ||
-        this.themeModal.classList.contains('active')) { // Prevent if theme modal is open
+        this.themeModal.classList.contains('active') ||
+        this.monthlySummaryModalOverlay.classList.contains('active')) { // NEW: Prevent if monthly summary modal is open
         return;
     }
 
@@ -418,6 +439,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
         this.hideShiftModal();
     }
   }
+
 
   // Gets data for a specific day from the active calendar
   getDayData(day) {
@@ -489,7 +511,8 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     localStorage.setItem("userProfile", JSON.stringify(this.userProfile)); // Save profile data
   }
 
-  // Applies a given status to all selected days
+
+// Applies a given status to all selected days
   applyStatusToSelectedDays(status) {
     if (this.selectedDays.length === 0) {
       alert("कृपया कम से कम एक दिन चुनें!"); // Please select at least one day!
@@ -511,6 +534,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     this.selectedDays = [];
     this.renderCalendar();
   }
+
 
   // Clears status, overtime, notes, and shift for selected days
   clearSelectedDays() {
@@ -646,6 +670,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     document.body.style.overflow = 'hidden'; // Prevent body scroll
   }
 
+
   // Hides the day details panel
   hideDayDetails() {
     this.dayDetails.classList.remove('active');
@@ -655,6 +680,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     this.renderCalendar();
     document.body.style.overflow = ''; // Restore body scroll
   }
+
 
   // Saves the note for selected days
   saveDayNote() {
@@ -676,13 +702,14 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     this.hideDayDetails();
   }
 
-  // Changes the displayed month
+// Changes the displayed month
   changeMonth(offset) {
     this.currentDate.setMonth(this.currentDate.getMonth() + offset);
     this.selectedDays = [];
     this.hideDayDetails();
     this.hideOvertimeModal();
     this.hideShiftModal(); // Ensure shift modal is hidden on month change
+    this.hideMonthSummaryModal(); // NEW: Hide month summary modal on month change
     this.renderCalendar();
     this.updateCurrentDayHighlight();
   }
@@ -734,7 +761,33 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     const totalRecordedDays = present + absent + holiday + halfDay + leave + emergency + sick + festival;
     const attendanceRate = totalRecordedDays > 0 ? Math.round((present / totalRecordedDays) * 100) : 0;
 
-    alert(`📊 ${this.getFormattedMonthYear()} monthly summary:\n\n✅ उपस्थित: ${present} दिन\n🌓 आधा दिन: ${halfDay} दिन\n❌ अनुपस्थित: ${absent} दिन\n✈️ छुट्टी: ${leave} दिन\n🚨 आपातकालीन: ${emergency} दिन\n🤒 बीमार: ${sick} दिन\n🔄 शिफ्ट गणना: ${shiftCount} दिन\n🥮 त्योहार: ${festival} दिन\n🎉 अवकाश: ${holiday} दिन\n⏱ ओवरटाइम: ${overtime.toFixed(1)} घंटे\n\n📈 उपस्थिति दर (चिह्नित उपस्थित/अनुपस्थित दिनों के आधार पर): ${attendanceRate}%`);
+    // Populate the modal content instead of an alert
+    this.monthSummaryContent.innerHTML = `
+        <p><i class="fas fa-calendar-alt"></i> **सारांश**: ${this.getFormattedMonthYear()}</p>
+        <p><i class="fas fa-check-circle"></i> उपस्थित: ${present} दिन</p>
+        <p><i class="fas fa-adjust"></i> आधा दिन: ${halfDay} दिन</p>
+        <p><i class="fas fa-times-circle"></i> अनुपस्थित: ${absent} दिन</p>
+        <p><i class="fas fa-plane"></i> छुट्टी: ${leave} दिन</p>
+        <p><i class="fas fa-exclamation-triangle"></i> आपातकालीन: ${emergency} दिन</p>
+        <p><i class="fas fa-medkit"></i> बीमार: ${sick} दिन</p>
+        <p><i class="fas fa-sync-alt"></i> शिफ्ट: ${shiftCount} दिन</p>
+        <p><i class="fas fa-fireworks"></i> त्योहार: ${festival} दिन</p>
+        <p><i class="fas fa-umbrella-beach"></i> अवकाश: ${holiday} दिन</p>
+        <p><i class="fas fa-hourglass-half"></i> ओवरटाइम: ${overtime.toFixed(1)} घंटे</p>
+        <p class="summary-attendance-rate"><i class="fas fa-chart-line"></i> उपस्थिति दर: ${attendanceRate}%</p>
+    `;
+
+    // Show the modal
+    this.monthlySummaryModalOverlay.classList.add('active');
+    this.overlay.classList.add('active');
+    document.body.style.overflow = 'hidden'; // Prevent body scroll
+  }
+
+  // Hides the monthly summary modal
+  hideMonthSummaryModal() {
+    this.monthlySummaryModalOverlay.classList.remove('active');
+    this.overlay.classList.remove('active');
+    document.body.style.overflow = ''; // Restore body scroll
   }
 
   // Toggles the side menu visibility
@@ -765,6 +818,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     this.hideDayDetails();
     this.hideOvertimeModal();
     this.hideShiftModal();
+    this.hideMonthSummaryModal(); // NEW: Hide monthly summary modal when another screen is shown
     document.body.style.overflow = 'hidden'; // Prevent body scroll when a screen is active
   }
 
@@ -821,6 +875,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     });
   }
 
+
   // Birthday Reminder Functions
   addBirthday() {
     const name = this.birthdayNameInput.value.trim();
@@ -853,7 +908,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
   renderBirthdays() {
     this.birthdaysListContainer.innerHTML = '';
 
-    if (this.birthdays.length === 0) {
+  if (this.birthdays.length === 0) {
         const noBirthdaysMessage = document.createElement('p');
         noBirthdaysMessage.textContent = "अभी तक कोई जन्मदिन जोड़ा नहीं गया है। ऊपर दिए गए फ़ॉर्म का उपयोग करके जोड़ें।"; // No birthdays added yet. Use the form above to add.
         noBirthdaysMessage.style.textAlign = 'center';
@@ -955,6 +1010,7 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     this.updateProfileInitial();
   }
 
+
   updateProfileInitial() {
     const name = this.profileNameInput.value.trim();
     this.profileInitial.textContent = name.charAt(0).toUpperCase() || 'U';
@@ -1035,27 +1091,23 @@ this.prevMonthBtn.addEventListener('click', () => this.changeMonth(-1));
     });
   }
 
+
   addCalendar() {
     const newName = this.newCalendarNameInput.value.trim();
-
     if (!newName) {
-        alert("कृपया नए कैलेंडर के लिए एक नाम दर्ज करें।"); // Please enter a name for the new calendar.
+        alert("कृपया एक वैध कैलेंडर नाम दर्ज करें।"); // Please enter a valid calendar name.
         return;
     }
     if (this.calendars[newName]) {
-        alert(`"${newName}" नाम का कैलेंडर पहले से मौजूद है। कृपया एक अलग नाम चुनें।`); // A calendar with the name "${newName}" already exists. Please choose a different name.
+        alert(`"${newName}" नाम का कैलेंडर पहले से मौजूद है।`); // A calendar with the name "${newName}" already exists.
         return;
     }
 
-    this.calendars[newName] = {}; // Create an empty calendar object
-    this.activeCalendar = newName; // Set it as active
+    this.calendars[newName] = {};
     this.saveData();
-
-    this.newCalendarNameInput.value = ''; // Clear input
-    alert(`कैलender "${newName}" सफलतापूर्वक जोड़ा गया और सक्रिय किया गया।`); // Calendar "${newName}" successfully added and activated.
-    this.renderCalendarList(); // Re-render the list
-    this.renderCalendar(); // Re-render the main calendar with new active calendar
-    this.updateTopBarTitle(); // Update the title bar
+    this.newCalendarNameInput.value = '';
+    alert(`कैलेंडर "${newName}" सफलतापूर्वक जोड़ा गया।`); // Calendar "${newName}" successfully added.
+    this.renderCalendarList();
   }
 
   switchCalendar(nameToSwitch) {
@@ -1174,3 +1226,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     calendar.updateTopBarTitle(); // Ensure top bar title is set on initial load
   }, 500);
 });
+

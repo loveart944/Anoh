@@ -267,7 +267,6 @@ body.dark-theme .day.selected {
 .day.shift { background-color: #3498db; color: white; } /* Keep as is or define a variable */
 .day.festival { background-color: var(--color-festival); color: white; } /* Updated to use variable */
 
-
 .day.current-day::after {
   content: '';
   position: absolute;
@@ -335,7 +334,6 @@ body.dark-theme .note-indicator {
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
   z-index: 5;
 }
 
@@ -344,8 +342,8 @@ body.dark-theme .note-indicator {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  padding: 10px;
+  gap: 8px;
+  padding: 8px;
   max-width: 400px;
   margin: 0 auto;
 }
@@ -354,11 +352,11 @@ body.dark-theme .note-indicator {
   flex: 1 1 calc(25% - 10px);
   height: 40px;
   padding: 8px;
-  font-size: 12px;
+  font-size: 11px;
   border: none;
   border-radius: 12px;
   color: white;
-  font-weight: 600;
+  font-weight: 550;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -531,6 +529,7 @@ body.dark-theme .day-note:focus {
   transform: translateY(-2px);
   box-shadow: var(--shadow-default);
 }
+
 
 /* Overlay */
 .overlay {
@@ -1254,6 +1253,8 @@ body.dark-theme .profile-input-group input {
     color: var(--color-text-dark);
 }
 
+
+
 .profile-input-group input:focus {
   border-color: var(--color-primary);
   outline: none;
@@ -1636,12 +1637,3 @@ body.dark-theme .btn-theme-option {
   border-color: var(--color-primary);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-
-
-
-
-
-
-
-
-
