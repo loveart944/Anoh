@@ -1,17 +1,20 @@
-/* Base Light Theme Variables */
+
 :root {
-  --color-primary: #18a5a7;
-  --color-secondary: #18a5a7;
-  --color-present: #18a5a7;
-  --color-absent: #d7a859;
-  --color-holiday: #233a66;
-  --color-overtime: #f39c12; /* यह ओवरटाइम का मूल ऑरेंज कलर है */
-  --color-clear: #968b55;
-  --color-half-day: #652410;
-  --color-leave: #1b262a;
-  --color-emergency: #970d1a;
-  --color-sick: #5761b2;
-  --color-festival: #e5958e;
+  --color-primary: #4361ee;
+  --color-secondary: #3f37c9;
+  --color-present: #2ecc71; /* Original Present color */
+  --color-absent: #e74c3c; /* Original Absent color */
+  --color-holiday: #54acbf; /* Original Holiday color */
+  --color-overtime: #f39c12;
+  --color-clear: #bdc3c7;
+  --color-half-day: #8e44ad; /* Original Half Day color */
+  --color-leave: #34495e;    /* Original Leave color */
+  
+  /* NEW: Colors for Emergency, Sick, Festival */
+  --color-emergency: #e67e22; /* Orange-red for emergency */
+  --color-sick: #95a5a6;     /* Grey for sick */
+  --color-festival: #f1c40f; /* Yellow for festival */
+
   --color-sunday: #e2ceb1;
   --color-text-dark: #2b2d42;
   --color-text-light: #ffffff;
@@ -24,31 +27,6 @@
   --footer-height: 80px;
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
-  --gradient-bg: linear-gradient(135deg, #e0eafc, #cfdef3);
-  --header-gradient: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-}
-
-/* Dark Theme Variables */
-body.dark-theme {
-  --color-primary: #8d98ed;
-  --color-secondary: #7a82e6;
-  --color-present: #27ae60;
-  --color-absent: #c0392b;
-  --color-holiday: #4a9cae;
-  --color-overtime: #d8870c; /* Dark theme के लिए ओवरटाइम का ऑरेंज कलर */
-  --color-clear: #95a5a6;
-  --color-half-day: #773f91;
-  --color-leave: #2c3e50;
-  --color-festival: #fccf42;
-  --color-sunday: #a89a85;
-  --color-text-dark: #ecf0f1;
-  --color-text-light: #2b2d42;
-  --color-bg: #343a40;
-  --color-card: #495057;
-  --shadow-default: 0 4px 12px rgba(0,0,0,0.3);
-  --shadow-active: 0 6px 16px rgba(0,0,0,0.4);
-  --gradient-bg: linear-gradient(135deg, #2c3e50, #34495e);
-  --header-gradient: linear-gradient(135deg, #2c3e50, #1a252f);
 }
 
 * {
@@ -59,15 +37,14 @@ body.dark-theme {
 }
 
 body {
-  font-family: serif;
-  background: var(--gradient-bg);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #e0eafc, #cfdef3);
   color: var(--color-text-dark);
   min-height: 100vh;
   padding-top: var(--safe-area-top);
   padding-bottom: var(--safe-area-bottom);
   display: flex;
   flex-direction: column;
-  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Fixed header */
@@ -75,7 +52,7 @@ body {
   display: flex;
   align-items: center;
   padding: 0 20px;
-  background: var(--header-gradient);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   height: var(--header-height);
   box-shadow: var(--shadow-default);
   position: fixed;
@@ -83,7 +60,6 @@ body {
   left: 0;
   right: 0;
   z-index: 100;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .logo {
@@ -94,7 +70,7 @@ body {
 
 .logo-icon {
   font-size: 24px;
-  color: var(--color-text-light);
+  color: white;
   background: rgba(255, 255, 255, 0.2);
   width: 36px;
   height: 36px;
@@ -107,14 +83,14 @@ body {
 .title {
   font-weight: 700;
   font-size: 1.25rem;
-  color: var(--color-text-light);
+  color: white;
   letter-spacing: -0.5px;
 }
 
 .menu-bar {
   font-size: 1.8rem;
   cursor: pointer;
-  color: var(--color-text-light);
+  color: white;
   margin-left: auto;
 }
 
@@ -140,21 +116,20 @@ body {
   margin-bottom: 20px;
   position: relative;
   z-index: 1;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
 }
 
 .calendar-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .btn-nav-month {
   background: rgba(67, 97, 238, 0.1);
   border: none;
   width: 40px;
-  height: 45px;
+  height: 40px;
   border-radius: 50%;
   font-size: 1.8rem;
   cursor: pointer;
@@ -170,17 +145,8 @@ body {
   transform: scale(1.05);
 }
 
-body.dark-theme .btn-nav-month {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--color-text-dark);
-}
-body.dark-theme .btn-nav-month:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-
 .month-year-display {
-  font-family: serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 700;
   font-size: 1.3rem;
   color: var(--color-text-dark);
@@ -218,10 +184,10 @@ body.dark-theme .btn-nav-month:hover {
   background: var(--color-bg);
   font-weight: 600;
   height: 47px;
-  color: var(--color-text-dark);
-  transition: all 0.2s ease, background-color 0.3s ease;
+  color: var(--color-text-dark); /* Default text color for days */
+  transition: all 0.2s ease;
   font-size: 1.2rem;
-  border: 2px solid transparent;
+  border: 2px solid transparent; /* Keep this for selected state */
   min-width: 35px;
   min-height: 35px;
 }
@@ -235,12 +201,8 @@ body.dark-theme .btn-nav-month:hover {
   background: rgba(226, 206, 177, 0.3);
   color: #c44512;
 }
-body.dark-theme .day.sunday {
-    background: rgba(168, 154, 133, 0.3);
-    color: #f7a87e;
-}
 
-/* Empty day styles */
+/* खाली दिनों के लिए स्टाइल */
 .day.empty-day {
   background-color: transparent;
   cursor: default;
@@ -253,31 +215,85 @@ body.dark-theme .day.sunday {
   transform: scale(1.05);
   z-index: 2;
 }
-body.dark-theme .day.selected {
-    box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.2);
+
+/* --- UPDATED PRESENT DAY STYLE (Light green background, green text, and green border) --- */
+.day.present { 
+  background-color: rgba(46, 204, 113, 0.2); /* Original green color (2ecc71) with 20% opacity */
+  color: var(--color-present); /* Text color matching the original green */
+  border: 2px solid var(--color-present); /* Green border added */
 }
 
-.day.present { background-color: var(--color-present); color: white; }
-.day.absent { background-color: var(--color-absent); color: white; }
-.day.holiday { background-color: var(--color-holiday); color: white; }
-.day.half-day { background-color: var(--color-half-day); color: white; }
-.day.leave { background-color: var(--color-leave); color: white; }
-.day.emergency { background-color: var(--color-emergency); color: white; } /* Updated to use variable */
-.day.sick { background-color: var(--color-sick); color: white; } /* Updated to use variable */
-.day.shift { background-color: #3498db; color: white; } /* Keep as is or define a variable */
-.day.festival { background-color: var(--color-festival); color: white; } /* Updated to use variable */
+/* --- UPDATED ABSENT DAY STYLE --- */
+.day.absent { 
+  background-color: rgba(231, 76, 60, 0.2); /* Original red color (e74c3c) with 20% opacity */
+  color: var(--color-absent); /* Text color matching the original red */
+  border: 2px solid var(--color-absent); /* Red border added */
+}
+
+/* --- UPDATED HOLIDAY DAY STYLE --- */
+.day.holiday { 
+  background-color: rgba(84, 172, 191, 0.2); /* Original blue/cyan color (54acbf) with 20% opacity */
+  color: var(--color-holiday); /* Text color matching the original blue/cyan */
+  border: 2px solid var(--color-holiday); /* Holiday color border added */
+}
+
+/* --- UPDATED LEAVE DAY STYLE --- */
+.day.leave { 
+  background-color: rgba(52, 73, 94, 0.2); /* Original dark grey/blue color (34495e) with 20% opacity */
+  color: var(--color-leave); /* Text color matching the original dark grey/blue */
+  border: 2px solid var(--color-leave); /* Leave color border added */
+}
+
+/* --- UPDATED HALF-DAY STYLE (Light color, half-fill, and text color, with border) --- */
+.day.half-day {
+  /* Half-day color को हल्का करने के लिए rgba का उपयोग करें */
+  background: linear-gradient(to bottom, rgba(142, 68, 173, 0.6) 0%, rgba(142, 68, 173, 0.6) 50%, transparent 50%, transparent 100%);
+  color: var(--color-half-day); /* तारीख का रंग half-day color से मैच करेगा */
+  border: 2px solid var(--color-half-day); /* Half-day color border added */
+}
+/* ------------------------------------------------------------------- */
+
+/* --- NEW: EMERGENCY DAY STYLE --- */
+.day.emergency {
+  background-color: rgba(230, 126, 34, 0.2); /* --color-emergency (e67e22) with 20% opacity */
+  color: var(--color-emergency); /* Text color matching emergency color */
+  border: 2px solid var(--color-emergency); /* Emergency color border */
+}
+
+/* --- NEW: SICK DAY STYLE --- */
+.day.sick {
+  background-color: rgba(149, 165, 166, 0.2); /* --color-sick (95a5a6) with 20% opacity */
+  color: var(--color-sick); /* Text color matching sick color */
+  border: 2px solid var(--color-sick); /* Sick color border */
+}
+
+/* --- NEW: FESTIVAL DAY STYLE --- */
+.day.festival {
+  background-color: rgba(241, 196, 15, 0.2); /* --color-festival (f1c40f) with 20% opacity */
+  color: var(--color-festival); /* Text color matching festival color */
+  border: 2px solid var(--color-festival); /* Festival color border */
+}
+/* ------------------------------------------------------------------- */
+
+
+/* --- UPDATED CURRENT DAY STYLE (Orange text, underline remains) --- */
+.day.current-day {
+  color: #ff8c00; /* Orange color for the date number */
+  /* background-color को नहीं बदला गया है */
+}
 
 .day.current-day::after {
   content: '';
   position: absolute;
-  bottom: 2px;
+  bottom: 2px; /* Adjust as needed */
   left: 50%;
   transform: translateX(-50%);
-  width: 40%;
+  width: 80%; /* Adjust width of the underline */
   height: 2px;
-  background-color: var(--color-primary);
+  background-color: var(--color-primary); /* Blue underline remains */
   border-radius: 2px;
 }
+/* ------------------------------------------------------------------ */
 
 
 .overtime-badge {
@@ -285,28 +301,7 @@ body.dark-theme .day.selected {
   bottom: 1px;
   right: 1px;
   font-size: 0.79rem;
-  background: black;
-  color: white;
-  border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-body.dark-theme .overtime-badge {
-    background: #eee;
-    color: var(--color-text-light);
-}
-
-.note-indicator {
-  position: absolute;
-  top: 1px;
-  right: 1px;
-  font-size: 0.6rem;
-  background: var(--color-primary);
+  background: var(--color-overtime); /* Changed to use overtime color */
   color: white;
   border-radius: 50%;
   width: 16px;
@@ -314,55 +309,64 @@ body.dark-theme .overtime-badge {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 5;
-}
-body.dark-theme .note-indicator {
-    background: var(--color-primary);
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Added subtle shadow */
 }
 
-.shift-indicator {
+/* --- NEW: Shift Badge Style --- */
+.shift-badge {
   position: absolute;
   top: 1px;
-  left: 1px;
-  font-size: 0.75rem;
-  background: black;
+  right: 1px; /* Top-left corner for shift badge */
+  font-size: 0.7rem;
+  background: var(--color-primary); /* Primary color for shift badge */
   color: white;
   border-radius: 50%;
-  width: 17px;
-  height: 17px;
+  width: 12px;
+  height: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  z-index: 5;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  z-index: 3; /* Ensure it's above other elements */
 }
+/* ------------------------------- */
 
+.note-indicator {
+  position: absolute;
+  top: 1px;
+  right: 32px;
+  font-size: 0.6rem;
+  background: var(--color-primary);
+  color: white;
+  border-radius: 50%;
+  width: 9px;
+  height: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .action-button-wrapper {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  padding: 8px;
+  gap: 10px;
+  padding: 10px;
   max-width: 400px;
   margin: 0 auto;
 }
 
 .btn-action {
-  flex: 1 1 calc(25% - 10px);
-  height: 40px;
+  flex: 1 1 calc(25% - 10px); /* 4 per row */
   padding: 8px;
-  font-size: 11px;
+  font-size: 12px;
   border: none;
   border-radius: 12px;
   color: white;
-  font-weight: 550;
+  font-weight: 600;
   text-align: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  font-family: serif;
 }
 
 .button {
@@ -387,31 +391,34 @@ body.dark-theme .note-indicator {
 .button:hover {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
   transform: translateY(-3px);
+  transform: scale(1.05) rotate(5deg);
   background-image: linear-gradient(135deg, #ff6ec4 0%, #7873f5 100%);
   color: white;
 }
 
-.btn-present { background: linear-gradient(135deg, var(--color-present), var(--color-present)); }
-.btn-absent { background: linear-gradient(135deg, var(--color-absent), var(--color-absent)); }
-.btn-holiday { background: linear-gradient(135deg, var(--color-holiday), var(--color-holiday)); }
-.btn-clear { background: linear-gradient(135deg, var(--color-clear), var(--color-clear)); }
-.btn-note { background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); } /* Changed to primary */
-.btn-overtime { background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); } /* Changed to primary */
-.btn-half-day { background: linear-gradient(135deg, var(--color-half-day), var(--color-half-day)); } /* Changed to primary */
+.btn-present { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.btn-absent { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.btn-holiday { background: linear-gradient(135deg, #3498db, #2980b9); }
+.btn-clear { background: linear-gradient(135deg, #7f8c8d, #6c7a7d); }
+.btn-note { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+.btn-overtime { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.btn-half-day { background: linear-gradient(135deg, #9b59b6, #8e44ad); } /* New Half Day button style */
+.btn-leave { background: linear-gradient(135deg, #34495e, #2c3e50); }     /* New Leave button style */
+.btn-shift {
+  background: linear-gradient(135deg, #1abc9c, #16a085); /* Teal/Turquoise color */
+}
 
-.btn-leave { background: linear-gradient(135deg, var(--color-leave), var(--color-leave)); } /* Changed to primary */
-/* New button styles */
-.btn-emergency { background: linear-gradient(135deg, var(--color-emergency), var(--color-emergency)); }
-.btn-sick { background: linear-gradient(135deg, var(--color-sick), var(--color-sick)); }
-.btn-shift { background: linear-gradient(135deg, #30e9ff, #0d0551); } /* Keep as is or define a variable */
-.btn-festival { background: linear-gradient(135deg, var(--color-festival), var(--color-festival)); }
-
+/* NEW: Styles for Emergency, Sick, Festival Buttons */
+.btn-emergency { background: linear-gradient(135deg, #e67e22, #d35400); } /* Orange-red gradient */
+.btn-sick { background: linear-gradient(135deg, #95a5a6, #7f8c8d); }     /* Grey gradient */
+.btn-festival { background: linear-gradient(135deg, #f1c40f, #f39c12); } /* Yellow/Orange gradient */
+/* ------------------------------------------------- */
 
 .btn-month-summary {
   display: block;
   margin: 0 auto;
   padding: 15px 25px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); /* Changed to primary */
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
   color: white;
   border: none;
   border-radius: 12px;
@@ -424,17 +431,16 @@ body.dark-theme .note-indicator {
   font-size: 0.9rem;
   width: 100%;
   max-width: 300px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 20px; /* Added margin to push it below calendar */
+  margin-bottom: 20px; /* Added margin for separation from buttons */
 }
-
 
 .btn-month-summary:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-active);
 }
 
-/* Day details panel */
+/* Day details panel (Modal) */
 .day-details {
   background: var(--color-card);
   border-radius: var(--border-radius);
@@ -446,21 +452,20 @@ body.dark-theme .note-indicator {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%); /* Start position */
   z-index: 200;
-  display: none;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
 
+  /* Key changes for smooth animation */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out, visibility 0s linear 0.4s; /* Delay visibility change */
+}
 
 .day-details.active {
-  display: block;
-  animation: slideIn 0.4s ease-out;
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translate(-50%, -40%); }
-  to { opacity: 1; transform: translate(-50%, -50%); }
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, -50%); /* End position */
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* No delay on showing */
 }
 
 .day-details-header {
@@ -470,9 +475,6 @@ body.dark-theme .note-indicator {
   margin-bottom: 15px;
   padding-bottom: 10px;
   border-bottom: 1px solid #eee;
-}
-body.dark-theme .day-details-header {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .day-details-title {
@@ -494,12 +496,7 @@ body.dark-theme .day-details-header {
   resize: vertical;
   font-family: inherit;
   font-size: 1rem;
-  transition: border 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-  background-color: var(--color-bg);
-  color: var(--color-text-dark);
-}
-body.dark-theme .day-note {
-    border-color: #666;
+  transition: border 0.3s ease;
 }
 
 .day-note:focus {
@@ -507,14 +504,11 @@ body.dark-theme .day-note {
   outline: none;
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
 }
-body.dark-theme .day-note:focus {
-    box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
-}
 
 .btn-save-note {
   margin-top: 15px;
   padding: 12px 25px;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); /* Changed to primary */
+  background: linear-gradient(135deg, #4361ee, #3a0ca3);
   color: white;
   border: none;
   border-radius: 12px;
@@ -530,9 +524,8 @@ body.dark-theme .day-note:focus {
   box-shadow: var(--shadow-default);
 }
 
-
-/* Overlay */
-.overlay {
+/* Common Overlay for all modals */
+.common-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -540,84 +533,60 @@ body.dark-theme .day-note:focus {
   bottom: 0;
   background: rgba(0,0,0,0.5);
   z-index: 150;
-  display: none;
+
+  /* Key changes for smooth animation */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease-out, visibility 0s linear 0.4s; /* Delay visibility change */
 }
 
-.overlay.active {
-  display: block;
+.common-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s ease-out; /* No delay on showing */
 }
 
-/* Modal Overlay (common for all modals like overtime, monthly summary, theme) */
+/* Modals (Overtime and Summary) */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0,0,0,0.5);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 200;
-  display: none; /* Initially hidden */
-  opacity: 0; /* For fade in/out effect */
-  transition: opacity 0.3s ease;
+
+  /* Key changes for smooth animation */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out, visibility 0s linear 0.4s; /* Delay visibility change */
 }
 
 .modal-overlay.active {
-  display: flex; /* Show when active */
-  opacity: 1; /* Fade in */
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out; /* No delay on showing */
 }
 
-/* Overtime Modal */
-.overtime-modal {
-  background: var(--color-card);
+.overtime-modal, .summary-modal, .shift-modal { /* Combined styling for all modal types */
+  background: white;
   padding: 25px;
   border-radius: 20px;
   width: 90%;
   max-width: 340px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  transition: background 0.3s ease;
+  /* Apply slideIn transform to modal content itself for independent animation */
+  transform: translateY(20px); /* Start slightly below center */
+  transition: transform 0.4s ease-out; /* This transition is managed by the .active class */
 }
 
-/* Monthly Summary Modal Specific Styles - NEWLY ADDED */
-.monthly-summary-modal {
-  background: var(--color-card);
-  padding: 25px;
-  border-radius: var(--border-radius); /* आपके मौजूदा वेरिएबल का उपयोग करें */
-  width: 90%;
-  max-width: 400px; /* ओवरटाइम मोडल से थोड़ा बड़ा हो सकता है */
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  transition: background 0.3s ease;
+.modal-overlay.active .overtime-modal,
+.modal-overlay.active .summary-modal,
+.modal-overlay.active .shift-modal {
+  transform: translateY(0); /* End at center */
 }
-
-.monthly-summary-modal .modal-content p {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-  color: var(--color-text-dark);
-  font-size: 0.95rem;
-}
-
-.monthly-summary-modal .modal-content p i {
-  margin-right: 10px;
-  color: var(--color-primary); /* आइकनों के लिए प्राइमरी कलर */
-  width: 20px; /* आइकनों को संरेखित करने के लिए */
-  text-align: center;
-}
-
-.monthly-summary-modal .modal-content .summary-attendance-rate {
-    font-weight: 600;
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid #eee; /* एक विभाजक रेखा */
-    color: var(--color-primary); /* हाइलाइट करने के लिए */
-}
-
-body.dark-theme .monthly-summary-modal .modal-content .summary-attendance-rate {
-    border-top: 1px solid rgba(255,255,255,0.1);
-}
-/* End Monthly Summary Modal Specific Styles */
 
 
 .modal-header {
@@ -634,7 +603,7 @@ body.dark-theme .monthly-summary-modal .modal-content .summary-attendance-rate {
 }
 
 .close-modal {
-  background: var(--color-primary); /* Changed to primary */
+  background: #f5f5f5;
   border: none;
   width: 36px;
   height: 36px;
@@ -644,20 +613,13 @@ body.dark-theme .monthly-summary-modal .modal-content .summary-attendance-rate {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white; /* Changed to white for better contrast with primary bg */
+  color: #666;
   transition: all 0.2s ease;
-}
-body.dark-theme .close-modal {
-    background: var(--color-secondary); /* Dark theme primary or secondary */
-    color: var(--color-text-dark); /* Lighter text for dark theme */
 }
 
 .close-modal:hover {
-  background: var(--color-secondary); /* Hover effect using secondary */
+  background: #eaeaea;
   transform: rotate(90deg);
-}
-body.dark-theme .close-modal:hover {
-    background: var(--color-primary); /* Dark theme primary on hover */
 }
 
 .overtime-input {
@@ -668,12 +630,7 @@ body.dark-theme .close-modal:hover {
   margin-bottom: 20px;
   font-size: 1.1rem;
   text-align: center;
-  transition: border 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-  background-color: var(--color-bg);
-  color: var(--color-text-dark);
-}
-body.dark-theme .overtime-input {
-    border-color: #666;
+  transition: border 0.3s ease;
 }
 
 .overtime-input:focus {
@@ -681,14 +638,12 @@ body.dark-theme .overtime-input {
   outline: none;
   box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
 }
-body.dark-theme .overtime-input:focus {
-    box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
-}
 
 .modal-actions {
   display: flex;
   justify-content: center;
   gap: 15px;
+  margin-top: 20px; /* Add margin for spacing below content */
 }
 
 .btn-modal {
@@ -706,26 +661,31 @@ body.dark-theme .overtime-input:focus {
   background: #f0f0f0;
   color: #666;
 }
-body.dark-theme .btn-cancel {
-    background: #6c757d;
-    color: #eee;
-}
 
 .btn-cancel:hover {
   background: #e0e0e0;
 }
-body.dark-theme .btn-cancel:hover {
-    background: #5a6268;
-}
 
 .btn-save {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); /* Changed to primary */
+  background: linear-gradient(135deg, #4361ee, #3a0ca3); /* Changed to primary color gradient */
   color: white;
 }
 
 .btn-save:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-default);
+}
+
+/* Summary Modal specific styles */
+.summary-content {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--color-text-dark);
+  text-align: center;
+}
+
+.summary-content strong {
+  color: var(--color-primary);
 }
 
 /* Status indicators */
@@ -737,32 +697,63 @@ body.dark-theme .btn-cancel:hover {
   margin-right: 5px;
 }
 
+/* --- NEW: Shift Modal Specific Styles --- */
+.shift-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 buttons per row */
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-shift-option {
+  padding: 12px 15px;
+  background: linear-gradient(135deg, #20c997, #17a2b8); /* A nice teal/cyan gradient */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-shift-option:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  background: linear-gradient(135deg, #17a2b8, #20c997); /* Reverse gradient on hover */
+}
+/* --------------------------------------- */
+
+
 /* Responsive adjustments */
 @media (max-width: 480px) {
   .calendar-container {
     padding: 15px;
   }
 
+  /* Action buttons: 4 per row on small screens too */
   .action-button-wrapper {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    justify-content: center;
+    gap: 8px; /* Slightly reduced gap for better fit */
     padding: 0 10px;
   }
 
   .btn-action {
-    min-width: unset;
-    font-size: 0.75rem;
-    padding: 10px 0;
+    flex: 1 1 calc(25% - 8px); /* 4 per row, adjusted for gap */
+    font-size: 0.7rem; /* Slightly smaller font for better fit */
+    padding: 8px 0; /* Reduced padding */
   }
 
   .btn-action i {
-    font-size: 1rem;
+    font-size: 0.9rem; /* Slightly smaller icon */
   }
 
   .month-year-display {
     font-size: 1.2rem;
   }
 }
+
 /* Animation for day cells */
 @keyframes pulse {
   0% { transform: scale(1); }
@@ -774,24 +765,23 @@ body.dark-theme .btn-cancel:hover {
   animation: pulse 0.5s ease;
 }
 
-
 /* Side Menu Styles */
 .side-menu {
   position: fixed;
   top: 0;
-  right: -250px;
+  right: -250px; /* शुरुआत में छिपा हुआ */
   width: 250px;
   height: 100%;
   background-color: var(--color-secondary);
   box-shadow: -4px 0 15px rgba(0,0,0,0.2);
-  transition: right 0.3s ease-in-out, background-color 0.3s ease;
+  transition: right 0.3s ease-in-out;
   z-index: 250;
-  padding-top: var(--header-height);
+  padding-top: var(--header-height); /* हेडर के लिए जगह */
   color: white;
 }
 
 .side-menu.active {
-  right: 0;
+  right: 0; /* दिखने पर */
 }
 
 .side-menu ul {
@@ -801,9 +791,7 @@ body.dark-theme .btn-cancel:hover {
 }
 
 .side-menu li a {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  display: block;
   padding: 15px 20px;
   text-decoration: none;
   color: white;
@@ -831,809 +819,3 @@ body.dark-theme .btn-cancel:hover {
   display: block;
 }
 
-/* Sub-Screen Common Styles */
-.screen-common {
-  flex: 1;
-  display: none;
-  flex-direction: column;
-  padding: calc(var(--header-height) + 15px) 15px calc(var(--footer-height) + 15px);
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--gradient-bg);
-  z-index: 90;
-  overflow-y: auto;
-  transition: background 0.3s ease;
-}
-
-.screen-common.active {
-  display: flex;
-}
-
-.screen-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-}
-body.dark-theme .screen-header {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.screen-header h2 {
-  flex-grow: 1;
-  font-weight: 700;
-  font-size: 1.5rem;
-  color: var(--color-primary);
-  text-align: center;
-}
-
-.btn-back {
-  background: var(--color-primary);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.btn-back:hover {
-  background: var(--color-secondary);
-  transform: scale(1.05);
-}
-
-/* Holiday Screen Styles */
-.holidays-list {
-  background: var(--color-card);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-default);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.holiday-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
-}
-body.dark-theme .holiday-item {
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.holiday-item:last-child {
-  border-bottom: none;
-}
-
-.holiday-name {
-  font-weight: 600;
-  color: var(--color-text-dark);
-  font-size: 1rem;
-  flex-grow: 1;
-}
-
-.holiday-date {
-  font-weight: 400;
-  color: #666;
-  font-size: 0.9rem;
-  text-align: right;
-}
-body.dark-theme .holiday-date {
-    color: #bbb;
-}
-
-
-/* Birthday Reminder Screen Styles */
-.birthday-form-card {
-  background: var(--color-card);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-default);
-  margin-bottom: 20px;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.birthday-form-card input,
-.birthday-form-card select {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-  color: var(--color-text-dark);
-  transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
-  background-color: var(--color-bg);
-}
-body.dark-theme .birthday-form-card input,
-body.dark-theme .birthday-form-card select {
-    border-color: #666;
-    background-color: #555;
-    color: var(--color-text-dark);
-}
-
-
-.birthday-form-card input:focus,
-.birthday-form-card select:focus {
-  border-color: var(--color-primary);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-}
-body.dark-theme .birthday-form-card input:focus,
-body.dark-theme .birthday-form-card select:focus {
-    box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
-}
-
-.birthday-form-card button {
-  width: 100%;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.birthday-form-card button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-default);
-}
-
-.birthdays-list-container {
-  background: var(--color-card);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-default);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.birthday-list-item {
-  background: #f8e8f8;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: column;
-  font-size: 0.95rem;
-  position: relative;
-  overflow: hidden;
-  transition: background 0.3s ease;
-}
-body.dark-theme .birthday-list-item {
-    background: #6c757d;
-}
-
-.birthday-list-item:last-child {
-  margin-bottom: 0;
-}
-
-.birthday-list-item strong {
-  color: var(--color-text-dark);
-  font-size: 1.1rem;
-  margin-bottom: 5px;
-}
-
-.birthday-list-item span {
-  color: #555;
-}
-body.dark-theme .birthday-list-item span {
-    color: #eee;
-}
-
-.birthday-list-item i {
-  margin-right: 8px;
-  color: var(--color-secondary);
-}
-
-.delete-birthday-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  color: #e74c3c;
-  font-size: 1.2rem;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.2s ease;
-}
-
-.delete-birthday-btn:hover {
-  opacity: 1;
-}
-
-.birthday-icon {
-  font-size: 1.8rem;
-  color: var(--color-primary);
-  margin-right: 10px;
-}
-
-
-/* Settings Screen Styles */
-.settings-screen {
-  display: none;
-}
-
-.settings-list {
-  background: var(--color-card);
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-default);
-  overflow: hidden;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.settings-item {
-  display: flex;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid #f0f0f0;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-body.dark-theme .settings-item {
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.settings-item:last-child {
-  border-bottom: none;
-}
-
-.settings-item:hover {
-  background-color: #f9f9f9;
-}
-body.dark-theme .settings-item:hover {
-    background-color: #555d65;
-}
-
-.settings-item i {
-  font-size: 1.3rem;
-  color: var(--color-primary);
-  margin-right: 15px;
-  width: 30px;
-  text-align: center;
-}
-
-.settings-item-text {
-  flex-grow: 1;
-  font-size: 1.1rem;
-  color: var(--color-text-dark);
-  font-weight: 500;
-}
-
-.settings-item-action {
-  color: #999;
-  font-size: 1.2rem;
-}
-body.dark-theme .settings-item-action {
-    color: #bbb;
-}
-
-/* Toggle Switch */
-.toggle-switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 28px;
-}
-
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-  border-radius: 28px;
-}
-body.dark-theme .slider {
-    background-color: #777;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-  border-radius: 50%;
-}
-body.dark-theme .slider:before {
-    background-color: #eee;
-}
-
-input:checked + .slider {
-  background-color: var(--color-primary);
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px var(--color-primary);
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(22px);
-  -ms-transform: translateX(22px);
-  transform: translateX(22px);
-}
-
-.settings-section-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--color-primary);
-  margin-top: 25px;
-  margin-bottom: 15px;
-  padding-left: 5px;
-}
-
-
-/* My Profile Screen Styles */
-.profile-screen {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding-top: calc(var(--header-height) + 20px);
-}
-
-.profile-content {
-  background: var(--color-card);
-  padding: 30px 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-default);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  margin-bottom: 20px;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.profile-icon-container {
-  width: 100px;
-  height: 100px;
-  background-color: var(--color-primary);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 25px;
-  font-size: 4rem;
-  font-weight: 700;
-  color: white;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  text-transform: uppercase;
-}
-
-.profile-input-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.profile-input-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: var(--color-text-dark);
-  font-size: 0.95rem;
-}
-
-.profile-input-group input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-family: inherit;
-  color: var(--color-text-dark);
-  transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
-  background-color: var(--color-bg);
-}
-body.dark-theme .profile-input-group input {
-    border-color: #666;
-    background-color: #555;
-    color: var(--color-text-dark);
-}
-
-
-
-.profile-input-group input:focus {
-  border-color: var(--color-primary);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-}
-body.dark-theme .profile-input-group input:focus {
-    box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
-}
-
-.social-media-section {
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-
-.social-media-section p {
-  font-weight: 600;
-  color: var(--color-primary);
-  margin-bottom: 15px;
-  font-size: 1.1rem;
-}
-
-.social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-.social-icon-btn {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  color: white;
-  font-size: 1.8rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-}
-
-.social-icon-btn.facebook { background: #3b5998; }
-.social-icon-btn.instagram { background: #E1306C; }
-.social-icon-btn.youtube { background: #FF0000; }
-
-.social-icon-btn:hover {
-  transform: translateY(-5px) scale(1.1);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-}
-
-.profile-actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.btn-profile-action {
-  flex: 1;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  max-width: 150px;
-}
-
-.btn-profile-action.save {
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-  color: white;
-}
-
-.btn-profile-action.save:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-default);
-}
-
-.btn-profile-action.close {
-  background: #e0e0e0;
-  color: #555;
-}
-body.dark-theme .btn-profile-action.close {
-    background: #6c757d;
-    color: #eee;
-}
-
-.btn-profile-action.close:hover {
-  background: #d0d0d0;
-}
-body.dark-theme .btn-profile-action.close:hover {
-    background: #5a6268;
-}
-
-/* Calendar Activities Screen Styles */
-.calendar-activities-screen {
-  display: none;
-}
-
-.calendar-form-card {
-  background: var(--color-card);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-default);
-  margin-bottom: 20px;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.calendar-form-card h3 {
-  font-size: 1.2rem;
-  color: var(--color-primary);
-  margin-bottom: 15px;
-}
-
-.calendar-form-card input {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-  color: var(--color-text-dark);
-  transition: border-color 0.2s ease, background-color 0.3s ease, color 0.3s ease;
-  background-color: var(--color-bg);
-}
-body.dark-theme .calendar-form-card input {
-    border-color: #666;
-    background-color: #555;
-    color: var(--color-text-dark);
-}
-
-.calendar-form-card input:focus {
-  border-color: var(--color-primary);
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
-}
-body.dark-theme .calendar-form-card input:focus {
-    box-shadow: 0 0 0 3px rgba(141, 152, 237, 0.1);
-}
-
-.calendar-form-card button {
-  width: 100%;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.calendar-form-card button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-default);
-}
-
-.calendars-list-container {
-  background: var(--color-card);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-default);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.calendars-list-container h3 {
-  font-size: 1.2rem;
-  color: var(--color-primary);
-  margin-bottom: 15px;
-}
-
-.calendar-list-item {
-  display: flex;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #f0f0f0;
-}
-body.dark-theme .calendar-list-item {
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.calendar-list-item:last-child {
-  border-bottom: none;
-}
-
-.calendar-list-item .calendar-name {
-  font-weight: 600;
-  color: var(--color-text-dark);
-  font-size: 1rem;
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-}
-
-.calendar-list-item .calendar-name i {
-  margin-right: 10px;
-  color: var(--color-primary);
-}
-
-.calendar-list-item .calendar-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.calendar-list-item .calendar-actions button {
-  background: none;
-  border: none;
-  font-size: 1.1rem;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.2s ease, color 0.2s ease;
-  padding: 5px;
-  border-radius: 50%;
-}
-
-.calendar-list-item .calendar-actions button:hover {
-  opacity: 1;
-}
-
-.calendar-list-item .calendar-actions .btn-switch {
-  color: var(--color-present);
-}
-.calendar-list-item .calendar-actions .btn-edit {
-  color: var(--color-overtime); /* This will still be orange if --color-overtime is orange */
-}
-.calendar-list-item .calendar-actions .btn-delete {
-  color: var(--color-absent);
-}
-
-.calendar-list-item.active-calendar .calendar-name {
-  color: var(--color-secondary);
-  font-weight: 700;
-}
-body.dark-theme .calendar-list-item.active-calendar .calendar-name {
-    color: var(--color-primary);
-}
-body.dark-theme .calendar-list-item.active-calendar .calendar-name i {
-    color: var(--color-primary);
-}
-
-.calendar-list-item.active-calendar .btn-switch {
-    pointer-events: none;
-    opacity: 0.3;
-}
-.calendar-list-item.active-calendar .btn-delete {
-    pointer-events: none;
-    opacity: 0.3;
-}
-
-
-/* Shift Options Specific Styles */
-.shift-options {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.btn-shift-option {
-    padding: 10px 15px;
-    font-size: 0.95rem;
-    background: var(--color-primary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.btn-shift-option:hover {
-    background: var(--color-secondary);
-    transform: translateY(-2px);
-}
-
-/* Styles for general modal buttons, ensuring they fit */
-.modal-actions .btn-modal {
-    flex: 1;
-    max-width: 150px;
-}
-
-/* About Screen Specific Styles */
-.about-screen {
-  display: none;
-}
-
-.about-content {
-  background: var(--color-card);
-  padding: 20px;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow-default);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.about-content h3 {
-  font-size: 1.3rem;
-  color: var(--color-primary);
-  margin-bottom: 15px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-}
-body.dark-theme .about-content h3 {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-}
-
-.about-feature-list {
-  list-style: none;
-  padding: 0;
-}
-
-.about-feature-list li {
-  margin-bottom: 10px;
-  font-size: 1rem;
-  line-height: 1.4;
-  color: var(--color-text-dark);
-}
-
-.about-feature-list li i {
-  color: var(--color-secondary);
-  margin-right: 10px;
-  width: 20px;
-  text-align: center;
-}
-
-.about-version {
-  text-align: center;
-  margin-top: 20px;
-  font-size: 0.9rem;
-  color: #777;
-}
-body.dark-theme .about-version {
-    color: #bbb;
-}
-
-/* Theme Selector Modal Styles */
-.theme-modal {
-  background: var(--color-card);
-  padding: 25px;
-  border-radius: 20px;
-  width: 90%;
-  max-width: 340px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
-.theme-options {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.btn-theme-option {
-  padding: 12px 20px;
-  border: 1px solid var(--color-primary);
-  border-radius: 12px;
-  background-color: var(--color-bg);
-  color: var(--color-text-dark);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-body.dark-theme .btn-theme-option {
-    border-color: var(--color-primary);
-    background-color: #555;
-    color: var(--color-text-dark);
-}
-
-
-.btn-theme-option:hover {
-  background-color: var(--color-primary);
-  color: white;
-}
-
-.btn-theme-option.active-theme {
-  background-color: var(--color-primary);
-  color: white;
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
