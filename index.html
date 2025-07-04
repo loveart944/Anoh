@@ -51,10 +51,7 @@
       </div>
     </section>
 
-    <button class="btn-month-summary" id="monthSummaryBtn">
-      <i class="fas fa-chart-pie"></i> View Monthly Summary
-    </button>
-
+    <!-- 'action-button-wrapper' अब 'View Monthly Summary' बटन से पहले है -->
     <div class="action-button-wrapper">
       <button class="btn-action btn-present" data-status="present">
         <i class="fas fa-check"></i>
@@ -92,7 +89,6 @@
         <i class="fas fa-exchange-alt"></i>
         <span>Shift</span>
       </button>
-      <!-- NEW: Emergency, Sick, Festival Buttons -->
       <button class="btn-action btn-emergency" data-status="emergency">
         <i class="fas fa-exclamation-triangle"></i>
         <span>Emergency</span>
@@ -106,6 +102,11 @@
         <span>Festival</span>
       </button>
     </div>
+
+    <!-- 'View Monthly Summary' बटन अब 'action-button-wrapper' के बाद है -->
+    <button class="btn-month-summary" id="monthSummaryBtn">
+      <i class="fas fa-chart-pie"></i> View Monthly Summary
+    </button>
   </main>
 
   <section class="day-details" id="dayDetails">
@@ -182,4 +183,5 @@
   <script src="script.js"></script>
 </body>
 </html>
+
 

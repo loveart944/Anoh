@@ -499,31 +499,33 @@ class AttendanceCalendar {
     const totalRecordedDays = present + absent + halfDay + leave + emergency + sick; // Festival is usually a non-working day, like holiday
     const attendanceRate = totalRecordedDays > 0 ? Math.round((present / totalRecordedDays) * 100) : 0;
 
-    this.summaryModalTitle.textContent = `**सारांश**: ${this.getFormattedMonthYear()}`; 
+    this.summaryModalTitle.textContent = `month ${this.getFormattedMonthYear()}`; 
     
     let shiftSummaryHtml = '';
     if (Object.keys(shifts).length > 0) {
-      shiftSummaryHtml += '<li><i class="fas fa-exchange-alt" style="color: #1abc9c;"></i> शिफ्ट्स:</li><ul>';
+      shiftSummaryHtml += '<li><i class="fas fa-exchange-alt" style="color: #1abc9c;"></i> shift:</li><ul>';
       for (const shiftType in shifts) {
-        shiftSummaryHtml += `<li>&nbsp;&nbsp;&nbsp;&nbsp;${shiftType}: ${shifts[shiftType]} दिन</li>`; 
+        shiftSummaryHtml += `<li>&nbsp;&nbsp;&nbsp;&nbsp;${shiftType}: ${shifts[shiftType]} day</li>`; 
       }
       shiftSummaryHtml += '</ul>';
     }
 
+
+
     
  this.summaryContent.innerHTML = `
       <ul class="summary-list">
-        <li><i class="fas fa-check-circle" style="color: var(--color-present);"></i> उपस्थित: ${present} दिन</li>
-        <li><i class="fas fa-hourglass-half" style="color: var(--color-half-day);"></i> आधा दिन: ${halfDay} दिन</li>
-        <li><i class="fas fa-times-circle" style="color: var(--color-absent);"></i> अनुपस्थित: ${absent} दिन</li>
-        <li><i class="fas fa-plane-departure" style="color: var(--color-leave);"></i> छुट्टी: ${leave} दिन</li>
-        <li><i class="fas fa-exclamation-triangle" style="color: var(--color-emergency);"></i> आपातकालीन: ${emergency} दिन</li>
-        <li><i class="fas fa-procedures" style="color: var(--color-sick);"></i> बीमार: ${sick} दिन</li>
-        <li><i class="fas fa-gift" style="color: var(--color-festival);"></i> त्योहार: ${festival} दिन</li>
-        <li><i class="fas fa-umbrella-beach" style="color: var(--color-holiday);"></i> अवकाश: ${holiday} दिन</li>
-        <li><i class="fas fa-clock" style="color: var(--color-overtime);"></i> ओवरटाइम: ${overtime.toFixed(1)} घंटे</li>
+        <li><i class="fas fa-check-circle" style="color: var(--color-present);"></i> Present: ${present} day</li>
+        <li><i class="fas fa-hourglass-half" style="color: var(--color-half-day);"></i> half-day: ${halfDay} day</li>
+        <li><i class="fas fa-times-circle" style="color: var(--color-absent);"></i> absent: ${absent} day</li>
+        <li><i class="fas fa-plane-departure"     style="color: var(--color-leave);"></i> leave:  ${leave}         day</li>
+        <li><i class="fas fa-exclamation-triangle" style="color: var(--color-emergency);"></i> emergency: ${emergency} day</li>
+        <li><i class="fas fa-procedures" style="color: var(--color-sick);"></i> sick: ${sick} day</li>
+        <li><i class="fas fa-gift" style="color: var(--color-festival);"></i> festival: ${festival} day</li>
+        <li><i class="fas fa-umbrella-beach" style="color: var(--color-holiday);"></i> holiday: ${holiday} day</li>
+        <li><i class="fas fa-clock" style="color: var(--color-overtime);"></i> overtime: ${overtime.toFixed(1)} hours</li>
         ${shiftSummaryHtml} 
-        <li class="attendance-rate-item"><i class="fas fa-chart-line" style="color: var(--color-primary);"></i> उपस्थिति दर: ${attendanceRate}%</li>
+        <li class="attendance-rate-item"><i class="fas fa-chart-line" style="color: var(--color-primary);"></i> Attendance rate: ${attendanceRate}%</li>
       </ul>
     `;
 
