@@ -25,9 +25,10 @@
       </div>
       <h1 class="title">Attendance Calendar</h1>
     </div>
-    <div class="menu-bar" id="menuToggle">
-      <i class="fas fa-bars"></i>
-    </div>
+    <button class="simple-menu-button" id="menuToggle">
+        <div class="simple-line top-line"></div>
+        <div class="simple-line bottom-line"></div>
+    </button>
   </header>
 
   <main class="app-container">
@@ -51,7 +52,6 @@
       </div>
     </section>
 
-    <!-- 'action-button-wrapper' अब 'View Monthly Summary' बटन से पहले है -->
     <div class="action-button-wrapper">
       <button class="btn-action btn-present" data-status="present">
         <i class="fas fa-check"></i>
@@ -103,7 +103,6 @@
       </button>
     </div>
 
-    <!-- 'View Monthly Summary' बटन अब 'action-button-wrapper' के बाद है -->
     <button class="btn-month-summary" id="monthSummaryBtn">
       <i class="fas fa-chart-pie"></i> View Monthly Summary
     </button>
@@ -183,5 +182,3 @@
   <script src="script.js"></script>
 </body>
 </html>
-
-

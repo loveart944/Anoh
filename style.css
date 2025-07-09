@@ -8,7 +8,7 @@
   --color-clear: #bdc3c7;
   --color-half-day: #8e44ad; /* Original Half Day color */
   --color-leave: #34495e;    /* Original Leave color */
-  
+
   /* NEW: Colors for Emergency, Sick, Festival */
   --color-emergency: #e67e22; /* Orange-red for emergency */
   --color-sick: #95a5a6;     /* Grey for sick */
@@ -65,6 +65,8 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  /* UPDATED: लोगो को बाईं ओर धकेलने के लिए */
+  margin-right: auto;
 }
 
 .logo-icon {
@@ -86,11 +88,48 @@ body {
   letter-spacing: -0.5px;
 }
 
-.menu-bar {
-  font-size: 1.8rem;
-  cursor: pointer;
-  color: white;
-  margin-left: auto;
+/* NEW: साधारण मेनू बटन कंटेनर */
+.simple-menu-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px; /* क्लिक करने योग्य क्षेत्र के लिए पैडिंग */
+    z-index: 1000;
+    min-width: 44px; /* टच पॉइंट दिशानिर्देशों के लिए */
+    min-height: 44px; /* टच पॉइंट दिशानिर्देशों के लिए */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end; /* UPDATED: लाइनों को दाईं ओर संरेखित करें */
+    /* margin-left: auto; यह पहले ही सही था, लेकिन फिर भी सुनिश्चित करें */
+    position: relative; /* एनिमेशन के लिए */
+}
+
+.simple-line {
+    height: 3px; /* लाइनों की मोटाई */
+    background-color: white; /* आपकी टॉप-बार के टेक्स्ट कलर से मैच करने के लिए सफेद */
+    border-radius: 2px;
+    margin: 3px 0; /* लाइनों के बीच की ऊर्ध्वाधर दूरी */
+    transition: all 0.3s ease; /* एनिमेशन के लिए */
+}
+
+.top-line {
+    width: 30px; /* ऊपर वाली लंबी लाइन की चौड़ाई */
+}
+
+.bottom-line {
+    width: 20px; /* नीचे वाली छोटी लाइन की चौड़ाई */
+}
+
+/* NEW: मेन्यू बटन एनिमेशन के लिए CSS (जब मेन्यू सक्रिय हो) */
+.simple-menu-button.is-active .top-line {
+    transform: translateY(6px) rotate(45deg); /* नीचे वाली लाइन की जगह पर लाएँ और घुमाएँ */
+    width: 30px; /* दोनों लाइनों को समान चौड़ाई दें */
+}
+
+.simple-menu-button.is-active .bottom-line {
+    transform: translateY(-6px) rotate(-45deg); /* ऊपर वाली लाइन की जगह पर लाएँ और घुमाएँ */
+    width: 30px; /* दोनों लाइनों को समान चौड़ाई दें */
 }
 
 /* Main content area */
@@ -98,8 +137,7 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  /* UPDATED: Calendar को और नीचे करने के लिए padding-top बढ़ाया गया */
-  padding: calc(var(--header-height) + 45px) 15px calc(var(--footer-height) + 15px); /* 15px से 30px किया गया */
+  padding: calc(var(--header-height) + 45px) 15px calc(var(--footer-height) + 15px);
   overflow-y: auto;
   position: relative;
   width: 100%;
@@ -217,39 +255,31 @@ body {
 }
 
 /* --- UPDATED PRESENT DAY STYLE (Light green background, green text, and green border) --- */
-.day.present { 
+.day.present {
   background-color: rgba(46, 204, 113, 0.2); /* Original green color (2ecc71) with 20% opacity */
   color: var(--color-present); /* Text color matching the original green */
   border: 2px solid var(--color-present); /* Green border added */
 }
 
 /* --- UPDATED ABSENT DAY STYLE --- */
-.day.absent { 
+.day.absent {
   background-color: rgba(231, 76, 60, 0.2); /* Original red color (e74c3c) with 20% opacity */
   color: var(--color-absent); /* Text color matching the original red */
   border: 2px solid var(--color-absent); /* Red border added */
 }
 
 /* --- UPDATED HOLIDAY DAY STYLE --- */
-.day.holiday { 
+.day.holiday {
   background-color: rgba(84, 172, 191, 0.2); /* Original blue/cyan color (54acbf) with 20% opacity */
   color: var(--color-holiday); /* Text color matching the original blue/cyan */
   border: 2px solid var(--color-holiday); /* Holiday color border added */
 }
 
 /* --- UPDATED LEAVE DAY STYLE --- */
-.day.leave { 
+.day.leave {
   background-color: rgba(52, 73, 94, 0.2); /* Original dark grey/blue color (34495e) with 20% opacity */
   color: var(--color-leave); /* Text color matching the original dark grey/blue */
   border: 2px solid var(--color-leave); /* Leave color border added */
-}
-
-/* --- UPDATED HALF-DAY STYLE (Light color, half-fill, and text color, with border) --- */
-.day.half-day {
-  /* Half-day color को हल्का करने के लिए rgba का उपयोग करें */
-  background: linear-gradient(to bottom, rgba(142, 68, 173, 0.6) 0%, rgba(142, 68, 173, 0.6) 50%, transparent 50%, transparent 100%);
-  color: var(--color-half-day); /* तारीख का रंग half-day color से मैच करेगा */
-  border: 2px solid var(--color-half-day); /* Half-day color border added */
 }
 /* ------------------------------------------------------------------- */
 
@@ -815,10 +845,10 @@ body {
   bottom: 0;
   background: rgba(0,0,0,0.5);
   z-index: 240;
-  display: none;
+  display: none; /* JavaScript द्वारा नियंत्रित */
 }
 
 .overlay-menu.active {
-  display: block;
+  display: block; /* JavaScript द्वारा 'active' क्लास जोड़ने पर दिखाई देगा */
 }
 

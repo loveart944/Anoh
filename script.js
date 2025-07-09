@@ -10,12 +10,14 @@ class AttendanceCalendar {
 
     this.initElements();
     this.initEventListeners();
-    this.renderCalendar(); 
+    this.renderCalendar();
     this.updateCurrentDayHighlight();
   }
 
   initElements() {
-    this.menuToggle = document.getElementById('menuToggle');
+    // OLD: this.menuToggle = document.getElementById('menuToggle'); // यह Font Awesome आइकॉन के लिए था
+    // NEW: आपके simple-menu-button को सेलेक्ट करें
+    this.menuToggle = document.getElementById('menuToggle'); // ID अभी भी 'menuToggle' ही है, HTML अपडेट हो चुका है
     this.sideMenu = document.getElementById('sideMenu');
     this.overlayMenu = document.getElementById('overlayMenu');
     this.monthYearDisplay = document.getElementById('monthYearDisplay');
@@ -116,13 +118,15 @@ class AttendanceCalendar {
 
   hideModal(modalElement) {
     modalElement.classList.remove('active');
-    if (!this.dayDetails.classList.contains('active') && 
-        !this.overtimeModal.classList.contains('active') && 
+    // Common overlay को तभी हटाएँ जब कोई अन्य modal या side menu active न हो
+    if (!this.dayDetails.classList.contains('active') &&
+        !this.overtimeModal.classList.contains('active') &&
         !this.summaryModal.classList.contains('active') &&
-        !this.shiftModal.classList.contains('active') && 
-        !this.sideMenu.classList.contains('active')) { 
+        !this.shiftModal.classList.contains('active') &&
+        !this.sideMenu.classList.contains('active') && // साइड मेन्यू की स्थिति भी चेक करें
+        !this.overlayMenu.classList.contains('active')) { // overlayMenu की स्थिति भी चेक करें
         this.commonOverlay.classList.remove('active');
-        document.body.style.overflow = ''; 
+        document.body.style.overflow = '';
     }
   }
 
@@ -130,11 +134,14 @@ class AttendanceCalendar {
     this.hideModal(this.dayDetails);
     this.hideModal(this.overtimeModal);
     this.hideModal(this.summaryModal);
-    this.hideModal(this.shiftModal); 
-    
-    this.clearSelectionVisuals(); 
-    this.selectedDays = []; 
-    this.renderCalendar(); 
+    this.hideModal(this.shiftModal);
+    // सुनिश्चित करें कि साइड मेन्यू बंद हो जाए जब सभी मोडल छिपे हों (यदि यह खुला है)
+    if (this.sideMenu.classList.contains('active')) {
+        this.toggleMenu(); // इसे बंद करने के लिए toggleMenu का उपयोग करें
+    }
+    this.clearSelectionVisuals();
+    this.selectedDays = [];
+    this.renderCalendar();
   }
 
   renderCalendar() {
@@ -174,7 +181,7 @@ class AttendanceCalendar {
             dayCell.classList.add(dayData.status);
         }
 
-        if (dayData.overtime && parseFloat(dayData.overtime) > 0) { 
+        if (dayData.overtime && parseFloat(dayData.overtime) > 0) {
           const overtimeBadge = document.createElement('span');
           overtimeBadge.className = 'overtime-badge';
           overtimeBadge.textContent = dayData.overtime;
@@ -187,7 +194,7 @@ class AttendanceCalendar {
           noteIndicator.innerHTML = '<i class="fas fa-pen"></i>';
           dayCell.appendChild(noteIndicator);
         }
-        
+
         // Show Shift Badge
         if (dayData.shift) {
           const shiftBadge = document.createElement('span');
@@ -207,7 +214,7 @@ class AttendanceCalendar {
   }
 
   toggleDaySelection(dayCell, day, event) {
-    if (this.dayDetails.classList.contains('active') || this.overtimeModal.classList.contains('active') || this.summaryModal.classList.contains('active') || this.shiftModal.classList.contains('active')) { 
+    if (this.dayDetails.classList.contains('active') || this.overtimeModal.classList.contains('active') || this.summaryModal.classList.contains('active') || this.shiftModal.classList.contains('active') || this.sideMenu.classList.contains('active')) { // Add sideMenu check here
         return;
     }
 
@@ -246,7 +253,7 @@ class AttendanceCalendar {
     }
 
     // NEW: Check for all possible data types when deciding to delete
-    if (!data || Object.keys(data).length === 0 || (Object.keys(data).length === 1 && data.status === undefined && data.overtime === undefined && data.note === undefined && data.shift === undefined)) { 
+    if (!data || Object.keys(data).length === 0 || (Object.keys(data).length === 1 && data.status === undefined && data.overtime === undefined && data.note === undefined && data.shift === undefined)) {
         delete this.calendars[this.activeCalendar][monthYearKey][day];
     } else {
         const existingData = this.calendars[this.activeCalendar][monthYearKey][day] || {};
@@ -267,7 +274,7 @@ class AttendanceCalendar {
 
     this.saveData();
 
-    this.renderCalendar(); 
+    this.renderCalendar();
 
     const dayCellElement = this.calendarGrid.querySelector(`.day[data-day="${day}"]`);
     if (dayCellElement && !dayCellElement.classList.contains('empty-day')) {
@@ -300,7 +307,7 @@ class AttendanceCalendar {
             status: status,
             overtime: currentData.overtime,
             note: currentData.note,
-            shift: currentData.shift 
+            shift: currentData.shift
         };
         this.setDayData(day, newData);
     });
@@ -320,12 +327,12 @@ class AttendanceCalendar {
             status: undefined,
             overtime: undefined,
             note: undefined,
-            shift: undefined 
+            shift: undefined
         });
     });
     this.clearSelectionVisuals();
     this.selectedDays = [];
-    this.hideAllModals(); 
+    this.hideAllModals();
   }
 
   showOvertimeModal() {
@@ -356,15 +363,15 @@ class AttendanceCalendar {
 
     this.selectedDays.forEach(day => {
         const currentData = this.getDayData(day) || {};
-        this.setDayData(day, { 
+        this.setDayData(day, {
             ...currentData,
             overtime: hours
         });
     });
 
     this.hideModal(this.overtimeModal);
-    this.selectedDays = []; 
-    this.clearSelectionVisuals(); 
+    this.selectedDays = [];
+    this.clearSelectionVisuals();
   }
 
   showDayDetails() {
@@ -398,15 +405,15 @@ class AttendanceCalendar {
 
     this.selectedDays.forEach(day => {
         const currentData = this.getDayData(day) || {};
-        this.setDayData(day, { 
+        this.setDayData(day, {
             ...currentData,
             note: note || undefined
         });
     });
 
     this.hideModal(this.dayDetails);
-    this.selectedDays = []; 
-    this.clearSelectionVisuals(); 
+    this.selectedDays = [];
+    this.clearSelectionVisuals();
   }
 
   // Shift Modal Functions
@@ -441,7 +448,7 @@ class AttendanceCalendar {
   changeMonth(offset) {
     this.currentDate.setMonth(this.currentDate.getMonth() + offset);
     this.selectedDays = [];
-    this.hideAllModals(); 
+    this.hideAllModals();
     this.renderCalendar();
     this.updateCurrentDayHighlight();
   }
@@ -473,7 +480,7 @@ class AttendanceCalendar {
     const data = this.calendars[this.activeCalendar]?.[monthYearKey] || {};
     let present = 0, absent = 0, holiday = 0, halfDay = 0, leave = 0, overtime = 0;
     let emergency = 0, sick = 0, festival = 0; // NEW: Counters for new statuses
-    const shifts = {}; 
+    const shifts = {};
 
     Object.values(data).forEach(entry => {
       if (entry.status === 'present') present++;
@@ -487,7 +494,7 @@ class AttendanceCalendar {
       if (entry.status === 'festival') festival++;
 
       if (entry.overtime) overtime += parseFloat(entry.overtime);
-      if (entry.shift) { 
+      if (entry.shift) {
         shifts[entry.shift] = (shifts[entry.shift] || 0) + 1;
       }
     });
@@ -499,21 +506,20 @@ class AttendanceCalendar {
     const totalRecordedDays = present + absent + halfDay + leave + emergency + sick; // Festival is usually a non-working day, like holiday
     const attendanceRate = totalRecordedDays > 0 ? Math.round((present / totalRecordedDays) * 100) : 0;
 
-    this.summaryModalTitle.textContent = `month ${this.getFormattedMonthYear()}`; 
-    
+    this.summaryModalTitle.textContent = `month ${this.getFormattedMonthYear()}`;
+
     let shiftSummaryHtml = '';
     if (Object.keys(shifts).length > 0) {
       shiftSummaryHtml += '<li><i class="fas fa-exchange-alt" style="color: #1abc9c;"></i> shift:</li><ul>';
       for (const shiftType in shifts) {
-        shiftSummaryHtml += `<li>&nbsp;&nbsp;&nbsp;&nbsp;${shiftType}: ${shifts[shiftType]} day</li>`; 
+        shiftSummaryHtml += `<li>&nbsp;&nbsp;&nbsp;&nbsp;${shiftType}: ${shifts[shiftType]} day</li>`;
       }
       shiftSummaryHtml += '</ul>';
     }
 
 
 
-    
- this.summaryContent.innerHTML = `
+        this.summaryContent.innerHTML = `
       <ul class="summary-list">
         <li><i class="fas fa-check-circle" style="color: var(--color-present);"></i> Present: ${present} day</li>
         <li><i class="fas fa-hourglass-half" style="color: var(--color-half-day);"></i> half-day: ${halfDay} day</li>
@@ -524,7 +530,7 @@ class AttendanceCalendar {
         <li><i class="fas fa-gift" style="color: var(--color-festival);"></i> festival: ${festival} day</li>
         <li><i class="fas fa-umbrella-beach" style="color: var(--color-holiday);"></i> holiday: ${holiday} day</li>
         <li><i class="fas fa-clock" style="color: var(--color-overtime);"></i> overtime: ${overtime.toFixed(1)} hours</li>
-        ${shiftSummaryHtml} 
+        ${shiftSummaryHtml}
         <li class="attendance-rate-item"><i class="fas fa-chart-line" style="color: var(--color-primary);"></i> Attendance rate: ${attendanceRate}%</li>
       </ul>
     `;
@@ -533,18 +539,21 @@ class AttendanceCalendar {
   }
 
   toggleMenu() {
-    if (this.sideMenu && this.overlayMenu) {
+    if (this.sideMenu && this.overlayMenu && this.menuToggle) { // Ensure menuToggle is also found
       this.sideMenu.classList.toggle('active');
       this.overlayMenu.classList.toggle('active');
+      this.menuToggle.classList.toggle('is-active'); // NEW: is-active क्लास को टॉगल करें
+
       if (this.sideMenu.classList.contains('active')) {
           document.body.style.overflow = 'hidden';
-          this.commonOverlay.classList.add('active'); 
+          this.commonOverlay.classList.add('active');
       } else {
           // Check if any other modal is active before removing overflow and common overlay
-          if (!this.dayDetails.classList.contains('active') && 
-              !this.overtimeModal.classList.contains('active') && 
+          if (!this.dayDetails.classList.contains('active') &&
+              !this.overtimeModal.classList.contains('active') &&
               !this.summaryModal.classList.contains('active') &&
-              !this.shiftModal.classList.contains('active')) { 
+              !this.shiftModal.classList.contains('active') &&
+              !this.overlayMenu.classList.contains('active')) { // overlayMenu की स्थिति भी चेक करें
               document.body.style.overflow = '';
               this.commonOverlay.classList.remove('active');
           }
@@ -581,13 +590,14 @@ class AttendanceCalendar {
 
     const removeAlert = () => {
       alertModal.remove();
-      if (!this.dayDetails.classList.contains('active') && 
-          !this.overtimeModal.classList.contains('active') && 
+      // यह सुनिश्चित करने के लिए कि commonOverlay तभी हटाई जाए जब कोई अन्य modal/sidemenu सक्रिय न हो
+      if (!this.dayDetails.classList.contains('active') &&
+          !this.overtimeModal.classList.contains('active') &&
           !this.summaryModal.classList.contains('active') &&
-          !this.shiftModal.classList.contains('active') && 
-          !this.sideMenu.classList.contains('active')) { 
+          !this.shiftModal.classList.contains('active') &&
+          !this.sideMenu.classList.contains('active')) { // साइड मेन्यू की स्थिति भी चेक करें
           this.commonOverlay.classList.remove('active');
-          document.body.style.overflow = ''; 
+          document.body.style.overflow = '';
       }
     };
 
@@ -604,4 +614,3 @@ class AttendanceCalendar {
 document.addEventListener('DOMContentLoaded', () => {
   const calendar = new AttendanceCalendar();
 });
-
