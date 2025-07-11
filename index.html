@@ -5,17 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Attendance Calendar with Notes</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"> <!-- CSS फ़ाइल यहाँ लिंक की गई है -->
 </head>
 <body>
   <nav class="side-menu" id="sideMenu">
     <ul>
-      <li><a href="#"><i class="fas fa-user"></i> मेरा प्रोफ़ाइल</a></li>
-      <li><a href="#"><i class="fas fa-calendar-alt"></i> कैलेंडर बदलें</a></li>
-      <li><a href="#"><i class="fas fa-cog"></i> सेटिंग्स</a></li>
-      <li><a href="#"><i class="fas fa-sign-out-alt"></i> लॉगआउट</a></li>
-    </ul>
+      <li><a href="#" id="myProfileBtn"><i class="fas fa-user"></i> My Profile</a></li>
+        <li><a href="#" id="calendarActivitiesBtn"><i class="fas fa-plus-circle"></i> Calendar Activities</a></li>
+
+
+         <li><a href="#" id="holidayFestivalBtn"><i class="fas fa-gift"></i> Holiday / Festival</a></li> <!-- ID जोड़ा गया -->
+      <li><a href="#" id="birthdayReminderBtn"><i class="fas fa-birthday-cake"></i> Birthday Reminder</a></li>
+
+
+      <li><a href="#" id="settingsBtn"><i class="fas fa-cog"></i> Settings</a></li>
+           <li><a href="#"><i class="fas fa-paper-plane"></i> Send Feedback</a></li>
+      </ul>
   </nav>
+
+
+
+
   <div class="overlay-menu" id="overlayMenu"></div>
 
   <header class="top-bar">
@@ -26,8 +36,8 @@
       <h1 class="title">Attendance Calendar</h1>
     </div>
     <button class="simple-menu-button" id="menuToggle">
-        <div class="simple-line top-line"></div>
-        <div class="simple-line bottom-line"></div>
+      <span class="simple-line top-line"></span>
+      <span class="simple-line bottom-line"></span>
     </button>
   </header>
 
@@ -108,6 +118,223 @@
     </button>
   </main>
 
+  <!-- Calendar Activities Page -->
+  <section class="calendar-activities-page" id="calendarActivitiesPage">
+    <header class="page-header">
+      <button class="btn-back" id="backToMainBtn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="page-title">Calendar Activities</h2>
+    </header>
+
+    <div class="page-content">
+      <div class="card add-new-calendar">
+        <h3 class="card-title">Add New Calendar</h3>
+        <div class="input-group">
+          <input type="text" id="newCalendarInput" placeholder="Enter new calendar name" class="text-input">
+          <button class="btn-primary" id="addCalendarBtn">Add Calendar</button>
+        </div>
+      </div>
+
+      <div class="card your-calendars">
+        <h3 class="card-title">Your Calendars (<span id="activeCalendarNameDisplay">Default</span> is active)</h3>
+        <ul class="calendars-list" id="calendarsList">
+          <!-- Calendar items will be dynamically inserted here by JavaScript -->
+        </ul>
+      </div>
+    </div>
+  </section>
+  <!-- END Calendar Activities Page -->
+
+  <!-- Birthday Reminder Page -->
+  <section class="birthday-reminder-page" id="birthdayReminderPage">
+    <header class="page-header">
+      <button class="btn-back" id="backToMainFromBirthdayBtn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="page-title"><i class="fas fa-birthday-cake"></i> Birthday Reminder</h2>
+    </header>
+
+    <div class="page-content">
+      <div class="card add-birthday">
+        <h3 class="card-title">Add New Birthday</h3>
+        <div class="input-group-vertical">
+          <input type="text" id="birthdayNameInput" placeholder="Name" class="text-input">
+          <input type="date" id="birthdayDateInput" class="text-input">
+          <select id="birthdayRelationSelect" class="text-input">
+            <option value="">Relation (optional)</option>
+            <option value="Family">Family</option>
+            <option value="Friend">Friend</option>
+            <option value="Colleague">Colleague</option>
+            <option value="Other">Other</option>
+          </select>
+          <button class="btn-primary" id="addBirthdayBtn">Add Birthday</button>
+        </div>
+      </div>
+
+      <div class="card your-birthdays">
+        <h3 class="card-title">Your Birthdays</h3>
+        <ul class="birthdays-list" id="birthdaysList">
+          <!-- Birthday items will be dynamically inserted here by JavaScript -->
+        </ul>
+      </div>
+    </div>
+  </section>
+  <!-- END Birthday Reminder Page -->
+
+  <!-- NEW: My Profile Page -->
+  <section class="my-profile-page" id="myProfilePage">
+    <header class="page-header">
+      <button class="btn-back" id="backToMainFromProfileBtn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="page-title"><i class="fas fa-user"></i> My Profile</h2>
+    </header>
+
+    <div class="page-content">
+      <div class="card profile-card">
+        <div class="profile-picture-container">
+          <img src="https://placehold.co/120x120/4361ee/ffffff?text=Profile" alt="Profile Picture" id="profileImage" class="profile-picture">
+          <input type="file" id="profileImageInput" accept="image/*" style="display: none;">
+          <button class="action-icon-btn upload-photo-btn" id="uploadPhotoButton" title="Upload Photo">
+            <i class="fas fa-camera"></i>
+          </button>
+          <button class="action-icon-btn remove-photo-btn" id="removePhotoButton" title="Remove Photo">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+
+        <div class="input-group-vertical profile-inputs">
+          <label for="profileNameInput">Name</label>
+          <input type="text" id="profileNameInput" placeholder="User Name" class="text-input">
+
+          <label for="profileEmailInput">Email</label>
+          <input type="email" id="profileEmailInput" placeholder="user@example.com" class="text-input">
+        </div>
+
+        <div class="social-media-links">
+          <p>Join us on social media:</p>
+          <div class="social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <div class="modal-actions profile-actions">
+          <button class="btn-modal btn-cancel" id="closeProfileBtn">Close</button>
+          <button class="btn-modal btn-save" id="saveProfileBtn">Save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- END NEW: My Profile Page -->
+
+  <!-- NEW: Settings Page -->
+  <section class="settings-page" id="settingsPage">
+    <header class="page-header">
+      <button class="btn-back" id="backToMainFromSettingsBtn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="page-title"><i class="fas fa-cog"></i> Settings</h2>
+    </header>
+
+    <div class="page-content">
+      <div class="card reminder-settings">
+        <h3 class="settings-group-title"><i class="fas fa-bell"></i> Reminder</h3>
+        <ul class="settings-list">
+          <li class="settings-item">
+            <div class="settings-item-content">
+              <i class="fas fa-bell"></i>
+              <span>Daily Reminder</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="dailyReminderToggle">
+              <span class="slider"></span>
+            </label>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card general-settings">
+        <h3 class="settings-group-title"><i class="fas fa-sliders-h"></i> General</h3>
+        <ul class="settings-list">
+          <li class="settings-item" id="appThemeSetting">
+            <div class="settings-item-content">
+              <i class="fas fa-paint-brush"></i>
+              <span>App Theme</span>
+            </div>
+            <button class="action-icon-btn">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </li>
+          <li class="settings-item" id="shareAppSetting">
+            <div class="settings-item-content">
+              <i class="fas fa-share-alt"></i>
+              <span>Share App</span>
+            </div>
+            <button class="action-icon-btn">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card other-settings">
+        <h3 class="settings-group-title"><i class="fas fa-info-circle"></i> Others</h3>
+        <ul class="settings-list">
+          <li class="settings-item" id="rateAppSetting">
+            <div class="settings-item-content">
+              <i class="fas fa-star"></i>
+              <span>Rate App</span>
+            </div>
+            <button class="action-icon-btn">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </li>
+          <li class="settings-item" id="privacyPolicySetting">
+            <div class="settings-item-content">
+              <i class="fas fa-shield-alt"></i>
+              <span>Privacy Policy</span>
+            </div>
+            <button class="action-icon-btn">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </li>
+          <li class="settings-item" id="aboutSetting">
+            <div class="settings-item-content">
+              <i class="fas fa-info-circle"></i>
+              <span>About</span>
+            </div>
+            <button class="action-icon-btn">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <!-- END NEW: Settings Page -->
+
+  <!-- NEW: Holiday / Festival Page -->
+  <section class="holiday-festival-page" id="holidayFestivalPage">
+    <header class="page-header">
+      <button class="btn-back" id="backToMainFromHolidayBtn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h2 class="page-title" id="holidayPageTitle">2025 Holidays & Festivals</h2>
+    </header>
+
+    <div class="page-content">
+      <div class="card holiday-list-card">
+        <ul class="holidays-list" id="holidaysList">
+          <!-- Holidays will be dynamically inserted here by JavaScript -->
+        </ul>
+      </div>
+    </div>
+  </section>
+  <!-- END NEW: Holiday / Festival Page -->
+
   <section class="day-details" id="dayDetails">
     <div class="day-details-header">
       <h3 class="day-details-title" id="dayDetailsTitle">Day Details</h3>
@@ -179,6 +406,7 @@
   <div class="overlay" id="commonOverlay"></div>
 
 
-  <script src="script.js"></script>
+  <script src="script.js"></script> <!-- JavaScript फ़ाइल यहाँ लिंक की गई है -->
 </body>
 </html>
+
